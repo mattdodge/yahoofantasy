@@ -36,6 +36,12 @@ def get_value(val):
     return from_response_object(APIAttr(), val)
 
 
+def as_list(val):
+    if isinstance(val, list):
+        return val
+    return [val]
+
+
 def from_response_object(obj, resp):
     """ Sets the attributes on obj based on resp """
     if not isinstance(resp, dict):

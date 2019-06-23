@@ -4,6 +4,7 @@ class League():
 
     def __init__(self):
         self.teams = list()
+        self.players = list()
         self.standings = None
         self.weeks = list()
 

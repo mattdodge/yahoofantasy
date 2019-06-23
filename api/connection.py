@@ -4,16 +4,16 @@ from yahoo_sdk.api.parse import from_response_object, parse_response
 from yahoo_sdk.util.persistence import fetch_league_from_persistence
 from yahoo_sdk.league import League
 from yahoo_sdk.team import Team
+from yahoo_sdk.player import Player
 from yahoo_sdk.week import Week
 from yahoo_sdk.standings import Standings
 
 
 class Connection():
 
-    def __init__(self, persist=None):
+    def __init__(self, league_id, persist=None):
         self.__persist_key = persist
-        self._league_raw = 'matt haha!'
-        self._league_id = 'nfl.l.751038'
+        self._league_id = league_id
         self.league = League()
 
     def fetch(self, persist_ttl=1800):
@@ -28,8 +28,9 @@ class Connection():
 
         self.__parse_league(league, raw=persisted_raw.get('league'))
         self.__parse_teams(league, raw=persisted_raw.get('teams'))
-        self.__parse_standings(league, raw=persisted_raw.get('standings'))
-        self.__parse_weeks(league, raw=persisted_raw.get('weeks'))
+        self.__parse_players(league, raw=persisted_raw.get('players'))
+        # self.__parse_standings(league, raw=persisted_raw.get('standings'))
+        # self.__parse_weeks(league, raw=persisted_raw.get('weeks'))
 
         return league
 
@@ -48,6 +49,15 @@ class Connection():
         for team in parsed['fantasy_content']['league']['teams']['team']:
             t = Team.from_response(team)
             league.teams.append(t)
+
+    def __parse_players(self, league, raw=None):
+        if raw is None:
+            raw = make_request('players', league=self._league_id)
+        league._players_raw = raw
+        parsed = parse_response(raw)
+        for player in parsed['fantasy_content']['league']['players']['player']:
+            p = Player.from_response(player)
+            league.players.append(p)
 
     def __parse_standings(self, league, raw=None):
         if raw is None:

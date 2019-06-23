@@ -10,14 +10,39 @@ def get_persistence_filename(persist_key):
 
 def save_league_to_persistence(league, persist_key):
     with open(get_persistence_filename(persist_key), 'wb') as fp:
-        pickle.dump({
-            "time": int(time()),
-            "league": league._raw,
-            "teams": league._teams_raw,
-            "standings": league.standings._raw,
-            "weeks": {week_num + 1: league.weeks[week_num]._raw
-                      for week_num in range(len(league.weeks))},
-        }, fp)
+        obj_to_save = {
+            "time": int(time())
+        }
+
+        # Save whatever we can
+        try:
+            obj_to_save["league"] = league._raw
+        except AttributeError:
+            pass
+
+        try:
+            obj_to_save["teams"] = league._teams_raw
+        except AttributeError:
+            pass
+
+        try:
+            obj_to_save["players"] = league._players_raw
+        except AttributeError:
+            pass
+
+        try:
+            obj_to_save["standings"] = league.standings._raw
+        except AttributeError:
+            pass
+
+        try:
+            obj_to_save["weeks"] = {
+                week_num + 1: league.weeks[week_num]._raw
+                for week_num in range(len(league.weeks))}
+        except AttributeError:
+            pass
+
+        pickle.dump(obj_to_save, fp)
 
 
 def fetch_league_from_persistence(persist_key, ttl=1800):
@@ -33,7 +58,7 @@ def fetch_league_from_persistence(persist_key, ttl=1800):
     with open(get_persistence_filename(persist_key), 'rb') as fp:
         try:
             persisted_data = pickle.load(fp)
-        except:
+        except Exception:
             logger.exception("Could not load persistence data")
             return None
 

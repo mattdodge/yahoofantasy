@@ -1,8 +1,8 @@
 import re
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
-from yahoo_sdk import logger
-from yahoo_sdk.api.attr import APIAttr
+from yahoofantasy import logger
+from yahoofantasy.api.attr import APIAttr
 
 
 def parse_response(resp):

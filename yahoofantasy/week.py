@@ -1,5 +1,5 @@
-from yahoo_sdk.matchup import Matchup
-from yahoo_sdk.api.parse import from_response_object
+from yahoofantasy.matchup import Matchup
+from yahoofantasy.api.parse import from_response_object
 
 
 class Week():

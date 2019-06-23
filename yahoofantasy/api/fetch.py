@@ -1,4 +1,4 @@
-from yahoo_sdk import logger
+from yahoofantasy import logger
 import requests
 
 YURL = "https://fantasysports.yahooapis.com/fantasy/v2"

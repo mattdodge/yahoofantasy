@@ -1,7 +1,7 @@
 import re
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
-from yahoofantasy import logger
+from yahoofantasy.util.logger import logger
 from yahoofantasy.api.attr import APIAttr
 
 

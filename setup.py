@@ -3,10 +3,8 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-reqs = [
-    'requests',
-    'xmljson',
-]
+with open('requirements.txt') as f:
+    reqs = f.read().splitlines()
 
 setuptools.setup(
     name="yahoofantasy",

@@ -1,3 +1,3 @@
 import logging
 
-logger = logging.getLogger("yahoo")
+logger = logging.getLogger("yahoofantasy")

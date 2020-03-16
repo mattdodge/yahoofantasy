@@ -17,6 +17,10 @@ setuptools.setup(
     install_requires=reqs,
     url="https://github.com/mattdodge/yahoofantasy",
     packages=setuptools.find_packages(),
+    entry_points='''
+        [console_scripts]
+        yahoofantasy=yahoofantasy.cli:yahoofantasy
+    ''',
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

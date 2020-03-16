@@ -5,13 +5,14 @@ import pickle
 from time import time
 
 _DEFAULT_SINGLETON = "__secret_default_function_argument"
+DEFAULT_TTL = 1800
 
 
 def get_persistence_filename(persist_key):
     return "{}.yahoofantasy".format(persist_key)
 
 
-def save_obj_to_persistence(save_path, save_val, persist_key="", overwrite=False):
+def save(save_path, save_val, persist_key="", overwrite=False):
     """ Save a key/value pair to persistence
 
     Args:
@@ -32,8 +33,7 @@ def save_obj_to_persistence(save_path, save_val, persist_key="", overwrite=False
         pickle.dump(persisted_data, fp)
 
 
-def load_obj_from_persistence(
-        load_path, default=_DEFAULT_SINGLETON, ttl=1800, persist_key=""):
+def load(load_path, default=_DEFAULT_SINGLETON, ttl=DEFAULT_TTL, persist_key=""):
     """ Load an object from a key path in persistence
 
     Args:
@@ -94,7 +94,7 @@ def save_league_to_persistence(league, persist_key):
         pickle.dump(obj_to_save, fp)
 
 
-def fetch_league_from_persistence(persist_key, ttl=1800):
+def fetch_league_from_persistence(persist_key, ttl=DEFAULT_TTL):
     if not persist_key:
         return None
 

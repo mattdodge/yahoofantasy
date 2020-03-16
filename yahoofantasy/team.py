@@ -1,8 +1,14 @@
-from yahoofantasy.api.parse import from_response_object
+from yahoofantasy.api.parse import as_list
 
 
 class Team():
 
-    @staticmethod
-    def from_response(resp):
-        return from_response_object(Team(), resp)
+    def __init__(self, ctx, league, team_id):
+        self.ctx = ctx
+        self.league = league
+        self.id = team_id
+
+    @property
+    def manager(self):
+        """ We can have multiple managers, so here's a shortcut to get 1 manager """
+        return as_list(self.managers.manager)[0]

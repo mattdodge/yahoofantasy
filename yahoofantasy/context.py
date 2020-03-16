@@ -11,7 +11,7 @@ from yahoofantasy.api.parse import (
     from_response_object,
 )
 from yahoofantasy.api.games import get_game_id
-from yahoofantasy.util.persistence import load_obj_from_persistence, save_obj_to_persistence
+from yahoofantasy.util.persistence import DEFAULT_TTL, load, save
 
 YAHOO_OAUTH_URL = "https://api.login.yahoo.com/oauth2"
 
@@ -22,7 +22,7 @@ class Context():
                  client_id=None, client_secret=None, refresh_token=None):
         super().__init__()
         self._persist_key = persist_key
-        auth_data = load_obj_from_persistence('auth', default={}, persist_key=persist_key, ttl=-1)
+        auth_data = self._load('auth', default={}, ttl=-1)
         self._client_id = client_id or auth_data.get('client_id')
         self._client_secret = client_secret or auth_data.get('client_secret')
         self._refresh_token = refresh_token or auth_data.get('refresh_token')
@@ -56,12 +56,40 @@ class Context():
         self._access_token_expires = time() + body.get('expires_in')
         self._refresh_token = body.get('refresh_token')
 
+    def _load(self, persist_path, default, ttl=DEFAULT_TTL):
+        """ A shortcut to load data from persistence for this context """
+        return load(persist_path, default, ttl=ttl, persist_key=self._persist_key)
+
+    def _save(self, persist_path, persist_val):
+        """ A shortcut to save data to persistence for this context """
+        return save(persist_path, persist_val, persist_key=self._persist_key)
+
+    def _load_or_fetch(self, persist_path, *args, return_parsed=True, **kwargs):
+        """ A shortcut to try loading from persistence but fetching if we miss
+
+        Args:
+            persist_path (str): A path to look for in persistence
+            return_parsed (bool): Whether to return the parsed XML. Raw data is persisted
+            *args/**kwargs: Arguments to pass to make_request if we need to
+        """
+        value = self._load(persist_path, default=None)
+        if value is None:
+            logger.debug("Missed on persitence for {}, "
+                         "fetching from API".format(persist_path))
+            value = self.make_request(*args, **kwargs)
+            self._save(persist_path, value)
+        else:
+            logger.debug("Using persisted value for {}".format(persist_path))
+        if return_parsed:
+            return parse_response(value)
+        return value
+
     def make_request(self, url, *args, **kwargs):
         if not self._access_token or time() > self._access_token_expires:
             self._get_access_token()
         return make_request(url, *args, token=self._access_token, **kwargs)
 
-    def get_leagues(self, game, season, persistence_ttl=1800):
+    def get_leagues(self, game, season, persist_ttl=DEFAULT_TTL):
         """ Get a list of all leagues for a given game and season
 
         Args:
@@ -69,19 +97,13 @@ class Context():
             season (int/str) - the fantasy season to get leagues for
         """
         game_id = get_game_id(game, season)
-        raw = load_obj_from_persistence(
-            'leagues', default=None, ttl=persistence_ttl, persist_key=self._persist_key)
-        if raw is None:
-            raw = self.make_request(
-                "users;use_login=1/games;game_keys={}/leagues".format(game_id))
-            save_obj_to_persistence('leagues', raw, persist_key=self._persist_key)
-        else:
-            logger.debug("Loading raw league data from persistence")
-        parsed = parse_response(raw)
+        data = self._load_or_fetch(
+            'leagues',
+            'users;use_login=1/games;game_keys={}/leagues'.format(game_id))
         leagues = []
         for league_data in as_list(get(
-                parsed, 'fantasy_content.users.user.games.game.leagues.league')):
-            league = League(get_value(league_data['league_key']))
+                data, 'fantasy_content.users.user.games.game.leagues.league')):
+            league = League(self, get_value(league_data['league_key']))
             from_response_object(league, league_data)
             leagues.append(league)
         return leagues

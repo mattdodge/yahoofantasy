@@ -10,7 +10,10 @@ def make_request(url, token, league=False, **kwargs):
     logger.debug("Making request to {}".format(url))
     resp = requests.get(
         "{}/{}".format(YURL, url),
-        headers={"Authorization": "Bearer {}".format(token)}
+        headers={
+            "Authorization": "Bearer {}".format(token),
+            "User-Agent": "Mozilla/5.0",
+        }
     )
 
     try:

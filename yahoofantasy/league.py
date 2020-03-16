@@ -2,7 +2,8 @@
 
 class League():
 
-    def __init__(self):
+    def __init__(self, league_id):
+        self.id = league_id
         self.teams = list()
         self.players = list()
         self.standings = None

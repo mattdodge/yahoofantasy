@@ -1,13 +1,15 @@
 import click
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
 import os
 import requests
+from time import time
 from urllib.parse import urlparse, parse_qs, urlencode
 import webbrowser
 
 from .utils import error, success
 from yahoofantasy.context import YAHOO_OAUTH_URL
+from yahoofantasy.util.persistence import \
+    save_obj_to_persistence, get_persistence_filename
 
 ACCESS_CODE = None
 
@@ -17,8 +19,8 @@ ACCESS_CODE = None
 @click.option('--client-secret', default='', help='Yahoo App Client Secret')
 @click.option('--redirect-uri', default='http://localhost:8000', help='Redirect URI')
 @click.option('--listen-port', default='8000', type=int, help='Port to listen on')
-@click.option('--persist-file', default='.yahoofantasy', help='Persistence File')
-def login(client_id, client_secret, redirect_uri, listen_port, persist_file):
+@click.option('--persist-key', default='', help='Persistence Key')
+def login(client_id, client_secret, redirect_uri, listen_port, persist_key):
     global ACCESS_CODE
     if not client_id:
         client_id = os.environ.get('YAHOO_CLIENT_ID')
@@ -60,20 +62,20 @@ def login(client_id, client_secret, redirect_uri, listen_port, persist_file):
     try:
         body = resp.json()
         access_token = body.get('access_token')
+        access_token_expires = time() + body.get('expires_in')
         refresh_token = body.get('refresh_token')
     except Exception:
         error("Couldn't get access token or refresh token", exit=True)
 
-    if persist_file:
-        success("Access token retrieved!. "
-                "This will be persisted at {}".format(persist_file))
-        with open(persist_file, 'w') as f:
-            json.dump({
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-            }, f)
-    else:
-        success("Access token retrieved!")
+    persist_file = get_persistence_filename(persist_key)
+    success("Access token retrieved!. This will be persisted at {}".format(persist_file))
+    save_obj_to_persistence('auth', {
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'access_token': access_token,
+        'access_token_expires': access_token_expires,
+        'refresh_token': refresh_token,
+    }, persist_key=persist_key)
     click.echo("Access Token : {}".format(access_token))
     click.echo("Refresh Token: {}".format(refresh_token))
 

@@ -8,20 +8,21 @@ The Yahoo Fantasy Sports API is difficult to comprehend, has [this strange one-p
 pip install yahoofantasy
 ```
 
-You will also need a application registered on the [Yahoo Developer Site](https://developer.yahoo.com/apps/). You'll need your client ID and secret. The app just needs to have read permissions.
+You will also need a application registered on the [Yahoo Developer Site](https://developer.yahoo.com/apps/). You'll need your client ID and secret. The app just needs to have read permissions. See below for instructions on how to set up your Yahoo Developer application if you don't have one already.
 
 ## Basic Usage
 
-You're going to want to start off by creating a context, providing your credentials and your refresh token. This context is where all of your API requests will originate and league information will live.
+You're going to want to start off by logging in to your Yahoo Developer application, then creating a context. This context is where all of your API requests will originate and league information will live.
 
+```bash
+$ yahoofantasy login
+```
+
+Once you've logged in, create a context and use that to make requests. For example, to fetch all of your leagues for a given game/season:
 ```python
 from yahoofantasy import Context
 
-ctx = Context(my_client_id, my_client_secret, my_refresh_token)
-```
-
-You can start by inspecting what leagues you are a part of:
-```python
+ctx = Context()
 leagues = ctx.get_leagues('mlb', 2020)
 for league in leagues:
     print(league.name + " -- " + league.league_type)

@@ -1,5 +1,5 @@
 # yahoofantasy stuff
-.yahoofantasy
+*.yahoofantasy
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

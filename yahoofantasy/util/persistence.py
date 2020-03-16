@@ -1,4 +1,4 @@
-from yahoo_sdk import logger
+from yahoofantasy import logger
 from os.path import isfile
 import pickle
 from time import time

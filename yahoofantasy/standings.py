@@ -1,5 +1,5 @@
-from yahoo_sdk.api.attr import APIAttr
-from yahoo_sdk.api.parse import from_response_object
+from yahoofantasy.api.attr import APIAttr
+from yahoofantasy.api.parse import from_response_object
 
 
 class Standings():

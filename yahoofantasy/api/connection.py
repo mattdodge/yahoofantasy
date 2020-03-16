@@ -1,12 +1,12 @@
-from yahoo_sdk import logger
-from yahoo_sdk.api.fetch import make_request
-from yahoo_sdk.api.parse import from_response_object, parse_response
-from yahoo_sdk.util.persistence import fetch_league_from_persistence
-from yahoo_sdk.league import League
-from yahoo_sdk.team import Team
-from yahoo_sdk.player import Player
-from yahoo_sdk.week import Week
-from yahoo_sdk.standings import Standings
+from yahoofantasy import logger
+from yahoofantasy.api.fetch import make_request
+from yahoofantasy.api.parse import from_response_object, parse_response
+from yahoofantasy.util.persistence import fetch_league_from_persistence
+from yahoofantasy.league import League
+from yahoofantasy.team import Team
+from yahoofantasy.player import Player
+from yahoofantasy.week import Week
+from yahoofantasy.standings import Standings
 
 
 class Connection():

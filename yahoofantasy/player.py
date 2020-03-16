@@ -1,4 +1,4 @@
-from yahoo_sdk.api.parse import from_response_object
+from yahoofantasy.api.parse import from_response_object
 
 
 class Player():

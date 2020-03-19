@@ -25,7 +25,6 @@ def get_value(val):
         return [get_value(sub_val) for sub_val in val]
 
     if not isinstance(val, dict):
-        logger.warn('Getting value of non dict...weird?')
         return val
 
     if '$' in val:

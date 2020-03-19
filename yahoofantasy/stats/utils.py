@@ -18,3 +18,30 @@ def get_stat_and_value(stat_obj, league_type='mlb'):
         raise ValueError("Stat ID {} not found in {} stats".format(stat_id, league_type))
 
     return stat_lookup['display'], stat_obj.value
+
+
+def get_stat_from_stat_list(stat_display, stat_list, order=None, league_type='mlb'):
+    global league_types
+    stats = league_types.get(league_type)
+    if not stats:
+        raise ValueError("League type of {} isn't valid".format(league_type))
+
+    target_stat_id = None
+    for stat_id, stat_data in stats.items():
+        # Some stats are the same for hitters/pitchers, if we specify the order we'll
+        # know which stat we're talking about
+        # 1 means higher is better, so for Runs order=1 is for hitters, 0 for pitchers
+        if stat_data['display'] == stat_display and (
+                order is None or order == stat_data['order']):
+            target_stat_id = stat_id
+            break
+    else:
+        raise ValueError(
+            "Stat {} not found in {} stats".format(stat_display, league_type))
+
+    for stat in stat_list:
+        if str(stat.stat_id) == str(target_stat_id):
+            return stat.value
+    else:
+        raise ValueError(
+            "Stat {}(id:{}) not found in input stat list".format(stat_display, stat_id))

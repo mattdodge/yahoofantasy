@@ -8,8 +8,7 @@ import webbrowser
 
 from .utils import error, success
 from yahoofantasy.context import YAHOO_OAUTH_URL
-from yahoofantasy.util.persistence import \
-    save_obj_to_persistence, get_persistence_filename
+from yahoofantasy.util.persistence import save, load, get_persistence_filename
 
 ACCESS_CODE = None
 
@@ -22,14 +21,19 @@ ACCESS_CODE = None
 @click.option('--persist-key', default='', help='Persistence Key')
 def login(client_id, client_secret, redirect_uri, listen_port, persist_key):
     global ACCESS_CODE
-    if not client_id:
-        client_id = os.environ.get('YAHOO_CLIENT_ID')
-    if not client_secret:
-        client_secret = os.environ.get('YAHOO_CLIENT_SECRET')
-    if not client_id:
-        client_id = click.prompt("Yahoo Client ID")
-    if not client_secret:
-        client_secret = click.prompt("Yahoo Client Secret")
+    persisted_auth_data = load('auth', default={}, ttl=-1, persist_key=persist_key)
+    client_id = (
+        client_id
+        or os.environ.get('YAHOO_CLIENT_ID')
+        or persisted_auth_data.get('client_id')
+        or click.prompt('Yahoo Client ID')
+    )
+    client_secret = (
+        client_secret
+        or os.environ.get('YAHOO_CLIENT_SECRET')
+        or persisted_auth_data.get('client_secret')
+        or click.prompt('Yahoo Client Secret')
+    )
 
     if not client_id or not client_secret:
         error("Must provide client ID and client secret", exit=True)
@@ -69,7 +73,7 @@ def login(client_id, client_secret, redirect_uri, listen_port, persist_key):
 
     persist_file = get_persistence_filename(persist_key)
     success("Access token retrieved!. This will be persisted at {}".format(persist_file))
-    save_obj_to_persistence('auth', {
+    save('auth', {
         'client_id': client_id,
         'client_secret': client_secret,
         'access_token': access_token,

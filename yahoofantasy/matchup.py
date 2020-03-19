@@ -15,3 +15,11 @@ class Matchup():
     @property
     def team2(self):
         return self.league.get_team(as_list(self.teams.team)[1].team_key)
+
+    @property
+    def team1_stats(self):
+        return as_list(self.teams.team)[0].team_stats.stats.stat
+        
+    @property
+    def team2_stats(self):
+        return as_list(self.teams.team)[1].team_stats.stats.stat

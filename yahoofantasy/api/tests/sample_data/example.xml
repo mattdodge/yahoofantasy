@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fantasy_content xml:lang="en-US" yahoo:uri="http://fantasysports.yahooapis.com/fantasy/v2/league/388.l.24122/scoreboard;week=1" time="289.68095779419ms" copyright="Data provided by Yahoo! and STATS, LLC" refresh_rate="60" xmlns:yahoo="http://www.yahooapis.com/v1/base.rng" xmlns="http://fantasysports.yahooapis.com/fantasy/v2/base.rng">
+ <root>
+  <individual_item>item value</individual_item>
+  <list_of_items>
+    <item_object>
+      <name>Item 1</name>
+      <item_key>Value 1</item_key>
+    </item_object>
+    <item_object>
+      <name>Item 2</name>
+      <item_key>Value 2</item_key>
+    </item_object>
+  </list_of_items>
+ </root>
+</fantasy_content>

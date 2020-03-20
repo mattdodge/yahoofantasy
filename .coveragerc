@@ -1,0 +1,18 @@
+[run]
+source = 
+    yahoofantasy/
+
+[report]
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about missing debug-only code:
+    def __repr__
+
+omit =
+    yahoofantasy/stats/generate.py
+    # We probably could test the CLI but it's a lot of work so yeah....
+    yahoofantasy/cli/*
+
+show_missing = True

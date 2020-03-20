@@ -32,15 +32,13 @@ class TestStatUtils(TestCase):
             StatResult('7', 50),  # Hitter Runs
             StatResult('36', 10),  # Pitcher Runs
         ]
-        self.assertEqual(
-            get_stat_from_stat_list('H/AB', stat_list),
-            '65/290')
+        self.assertEqual(get_stat_from_stat_list('H/AB', stat_list), '65/290')
         # Make sure we can get hitter runs and pitcher runs with our order flag
         self.assertEqual(get_stat_from_stat_list('R', stat_list, order=1), 50)
         self.assertEqual(get_stat_from_stat_list('R', stat_list, order=0), 10)
         # Stat missing from stat list
         with self.assertRaises(ValueError):
-            get_stat_from_stat_list('HR', stat_list),
+            get_stat_from_stat_list('HR', stat_list)
         # Non existent stat
         with self.assertRaises(ValueError):
-            get_stat_from_stat_list('WAR++', stat_list),
+            get_stat_from_stat_list('WAR++', stat_list)

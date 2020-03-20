@@ -1,5 +1,6 @@
 # yahoofantasy stuff
 *.yahoofantasy
+.testmondata
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

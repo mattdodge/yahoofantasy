@@ -1,5 +1,5 @@
 from pydash import get
-from yahoofantasy.matchup import Matchup
+from .matchup import Matchup
 from yahoofantasy.api.parse import from_response_object
 
 

@@ -1,7 +1,7 @@
 from pydash import get
 import requests
 from time import time
-from yahoofantasy.league import League
+from .resources.league import League
 from yahoofantasy.util.logger import logger
 from yahoofantasy.api.fetch import make_request
 from yahoofantasy.api.parse import (

@@ -1,9 +1,9 @@
 from yahoofantasy.api.parse import from_response_object, get_value
 from yahoofantasy.util.persistence import DEFAULT_TTL
 from yahoofantasy.util.logger import logger
-from yahoofantasy.team import Team
-from yahoofantasy.standings import Standings
-from yahoofantasy.week import Week
+from .team import Team
+from .standings import Standings
+from .week import Week
 
 
 class League():

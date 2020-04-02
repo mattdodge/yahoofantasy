@@ -1,0 +1,7 @@
+coverage==5.0.4
+flake8==3.7.9
+pytest==5.4.1
+pytest-cov==2.8.1
+pytest-testmon==1.0.2
+pytest-watch==4.2.0
+responses==0.10.12

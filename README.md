@@ -94,3 +94,17 @@ $ cd examples
 $ yahoofantasy login
 $ python readme.py
 ```
+
+## Development
+
+Issues, pull requests, and contributions are more than welcome.
+
+To run the tests, after install:
+```bash
+$ py.test
+```
+
+Or to keep running tests using testmon and drop into a pdb shell on failure (my preferred mode):
+```bash
+$ pytest-watch --pdb -- --testmon -s
+```

@@ -1,3 +1,4 @@
+import re
 import setuptools
 
 with open("README.md", "r") as fh:
@@ -6,9 +7,14 @@ with open("README.md", "r") as fh:
 with open('requirements.txt') as f:
     reqs = f.read().splitlines()
 
+with open('yahoofantasy/__init__.py', 'r') as fd:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                        fd.read(), re.MULTILINE).group(1)
+
+
 setuptools.setup(
     name="yahoofantasy",
-    version="0.0.2",
+    version=version,
     author="Matt Dodge",
     author_email="matt@dodge.com",
     description="An SDK for the Yahoo! Fantasy Sports API",

@@ -2,6 +2,8 @@
 
 The Yahoo Fantasy Sports API is difficult to comprehend, has [this strange one-page documentation setup](https://developer.yahoo.com/fantasysports/guide/) that is hard to navigate, and seems to only want to conform to a small portion of the OAuth spec. This library/SDK makes your life easier if you want to write an app that interfaces with the Yahoo Fantasy Sports API.
 
+This library will work for any Yahoo Fantasy Sports API leagues/teams. It contains some common constructs and helper methods for head-to-head MLB leagues at this time. More sports and league types are planned for the future.
+
 ## Installation
 
 ```
@@ -43,3 +45,52 @@ $ yahoofantasy login
 ```
 
 Try `yahoofantasy login --help` for some advanced options, like customizing the port or redirect URI
+
+## Concepts
+
+There is a general hierarchy that head-to-head leagues will follow. This hierarchy is represented with classes within this library. This code walkthrough will help you understand the organization of the library. The following examples are intended to be read sequentially and assume you have a **Context** with your logged in Yahoo credentials called `ctx`.
+
+* Your account will belong to one or more **League** objects.
+```python
+for league in ctx.get_leagues('mlb', 2019):
+    print(f"{league.id} - {league.name} ({league.league_type})")
+```
+    
+* A **League** will contain multiple **Team** objects.
+```python
+from yahoofantasy import League
+
+league = League(ctx, '388.l.25000')  # Use a manual league ID or get it from league.id above
+for team in league.teams():
+    print(f"Team Name: {team.name}\tManager: {team.manager.nickname}")
+```
+
+* A **League** has **Standings**, which is an ordered list of **Team** objects.
+```python
+for team in league.standings():
+    outcomes = team.team_standings.outcome_totals
+    print(f"#{team.team_standings.rank}\t{team.name}\t"
+          f"({outcomes.wins}-{outcomes.losses}-{outcomes.ties})")
+```
+
+* A **League** will contain multiple **Week** objects. A **Week** contains multiple **Matchup** objects, which are a head-to-head matchup of two **Team** objects for that week.
+```python
+week_3 = league.weeks()[2]
+for matchup in week_3.matchups:
+    print(f"{matchup.team1.name} vs {matchup.team2.name}")
+```
+
+* A **Matchup** will have multiple **Stat** objects for the two teams. A **Stat** object contains the display name of the stat as well as the value for the team.
+```python
+matchup = week_3.matchups[0]
+print(f"{matchup.team1.name}\tvs\t{matchup.team2.name}")
+for team1_stat, team2_stat in zip(matchup.team1_stats, matchup.team2_stats):
+    print(f"{team1_stat.value}\t{team1_stat.display}\t{team2_stat.value}")
+```
+
+The full sequence of these examples can be run in the examples folder under the `readme.py` script, like so:
+```
+$ cd examples
+$ yahoofantasy login
+$ python readme.py
+```

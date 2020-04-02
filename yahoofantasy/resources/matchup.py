@@ -1,4 +1,5 @@
 from yahoofantasy.api.parse import as_list
+from ..stats.stat import Stat
 
 
 class Matchup():
@@ -18,8 +19,10 @@ class Matchup():
 
     @property
     def team1_stats(self):
-        return as_list(self.teams.team)[0].team_stats.stats.stat
-        
+        return [Stat.from_value(d)
+                for d in as_list(self.teams.team)[0].team_stats.stats.stat]
+
     @property
     def team2_stats(self):
-        return as_list(self.teams.team)[1].team_stats.stats.stat
+        return [Stat.from_value(d)
+                for d in as_list(self.teams.team)[1].team_stats.stats.stat]

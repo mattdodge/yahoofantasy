@@ -5,8 +5,8 @@ league_types = {
 }
 
 
-def get_stat_and_value(stat_obj, league_type='mlb'):
-    """ Given a stat_obj, get a tuple of stat name and stat value """
+def get_stat_from_value(stat_obj, league_type='mlb'):
+    """ Given a stat_obj, get a Stat object with an associated value """
     global league_types
     stats = league_types.get(league_type)
     if not stats:
@@ -17,7 +17,10 @@ def get_stat_and_value(stat_obj, league_type='mlb'):
     if not stat_lookup:
         raise ValueError("Stat ID {} not found in {} stats".format(stat_id, league_type))
 
-    return stat_lookup['display'], stat_obj.value
+    from .stat import Stat
+    stat = Stat.from_dict(stat_id, stat_lookup)
+    stat.value = stat_obj.value
+    return stat
 
 
 def get_stat_from_stat_list(stat_display, stat_list, order=None, league_type='mlb'):

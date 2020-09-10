@@ -65,6 +65,14 @@ for team in league.teams():
     print(f"Team Name: {team.name}\tManager: {team.manager.nickname}")
 ```
 
+* A **Team** has multiple **Player** objects that define their lineup. This is their current lineup and not a lineup for a given week
+```python
+for team in league.standings():
+		players = team.players()
+		for player in players:
+				print(f"Player: {player.name.full}")
+```
+
 * A **League** has **Standings**, which is an ordered list of **Team** objects.
 ```python
 for team in league.standings():

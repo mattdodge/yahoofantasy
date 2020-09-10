@@ -21,13 +21,14 @@ games['mlb']['2017'] = 12
 games['mlb']['2018'] = 12
 games['mlb']['2019'] = 388
 games['mlb']['2020'] = 398
+games['nfl']['2020'] = 399
 # TODO: Fill in years prior to 2019
 
 
 def get_game_id(game, season):
     season = str(season)
     if game not in games:
-        raise ValueError("{} is not a valid game, must be 'mlb'".format(game))
+        raise ValueError("{} is not a valid game, must be 'mlb' or 'nfl'".format(game))
     if season not in games[game]:
         raise ValueError(
             "{} is not a valid season for {}".format(season, game))

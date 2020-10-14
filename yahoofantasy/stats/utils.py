@@ -1,7 +1,9 @@
 from .mlb import stats as stats_mlb
+from .nfl import stats as stats_nfl
 
 league_types = {
     'mlb': stats_mlb,
+    'nfl': stats_nfl,
 }
 
 

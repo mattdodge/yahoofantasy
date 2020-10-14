@@ -1,3 +1,4 @@
+import inspect
 import re
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
@@ -41,13 +42,25 @@ def as_list(val):
     return [val]
 
 
-def from_response_object(obj, resp):
+def from_response_object(obj, resp, set_raw=False):
     """ Sets the attributes on obj based on resp """
     if not isinstance(resp, dict):
         raise RuntimeError(
             "Cannot parse response object that isn't dict")
 
+    # Set the raw data in case we want it on the object
+    if set_raw:
+        setattr(obj, '_raw', resp)
+
+    ignore = [t[0] for t in sum([
+        inspect.getmembers(obj.__class__, predicate=inspect.ismethod),
+        inspect.getmembers(obj.__class__, predicate=inspect.isfunction),
+        inspect.getmembers(obj.__class__, predicate=inspect.isdatadescriptor),
+    ], [])]
     for attr in resp:
+        if attr in ignore:
+            # Don't set any skipped/ignored attributes
+            continue
         setattr(obj, attr, get_value(resp[attr]))
 
     return obj

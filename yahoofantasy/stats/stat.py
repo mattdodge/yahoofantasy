@@ -20,3 +20,6 @@ class Stat():
         """ Create a Stat object from an API stat value """
         # TODO: Get the game from a context or something like that
         return get_stat_from_value(d, game)
+
+    def __repr__(self):
+        return f"Stat {self.display} - {self.value}"

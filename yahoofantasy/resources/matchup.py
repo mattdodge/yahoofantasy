@@ -19,10 +19,14 @@ class Matchup():
 
     @property
     def team1_stats(self):
-        return [Stat.from_value(d)
-                for d in as_list(self.teams.team)[0].team_stats.stats.stat]
+        return self._get_matchup_team_stats(as_list(self.teams.team)[0])
 
     @property
     def team2_stats(self):
-        return [Stat.from_value(d)
-                for d in as_list(self.teams.team)[1].team_stats.stats.stat]
+        return self._get_matchup_team_stats(as_list(self.teams.team)[1])
+
+    def _get_matchup_team_stats(self, matchup_team):
+        if hasattr(matchup_team, 'team_stats'):
+            return [Stat.from_value(d) for d in matchup_team.team_stats.stats.stat]
+        else:
+            raise RuntimeError("Matchup does not contain individual stats")

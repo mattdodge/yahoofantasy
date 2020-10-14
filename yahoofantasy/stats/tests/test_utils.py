@@ -13,7 +13,7 @@ class TestStatUtils(TestCase):
         with self.assertRaises(ValueError):
             get_stat_from_stat_list('R', [StatResult('7', 50)], league_type='nfl')
         with self.assertRaises(ValueError):
-            get_stat_from_value(StatResult('7', 50), league_type='nfl')
+            get_stat_from_value(StatResult('7', 50), league_type='xxx')
 
     def test_get_stat_from_value(self):
         # String stat ID and stat value

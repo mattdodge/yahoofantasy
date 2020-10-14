@@ -19,14 +19,7 @@ class Player():
 
     def get_stats(self, week_num=None):
         """ Get this player's stats for a given week or the whole season """
-        # First item is the peristence key, second is the API filter
-        keys = ('season', '')
-        if week_num > 0:
-            keys = (str(week_num), f"type=week;week={week_num}")
-        data = self.league.ctx._load_or_fetch(
-            f"player.{self.player_id}.stats.{keys[0]}",
-            f"league/{self.league.id}/players;player_keys={self.player_key}/stats;{keys[1]}",
-        )
+        data = self._fetch_stats(week_num)
         stats_data = data['fantasy_content']['league']['players']['player']['player_stats']
         return [
             Stat.from_value(s, self.league.game_code)
@@ -40,3 +33,19 @@ class Player():
             return stats[0].value
         else:
             return None
+
+    def get_points(self, week_num=None):
+        """ Get this player's points for a given week or the whole season """
+        data = self._fetch_stats(week_num)
+        return get_value(data['fantasy_content']['league']['players']['player']['player_points']['total'])
+
+    def _fetch_stats(self, week_num=None):
+        """ Fetch the stats endpoint for a given week """
+        keys = ('season', '')
+        if week_num > 0:
+            keys = (str(week_num), f"type=week;week={week_num}")
+        data = self.league.ctx._load_or_fetch(
+            f"player.{self.player_id}.stats.{keys[0]}",
+            f"league/{self.league.id}/players;player_keys={self.player_key}/stats;{keys[1]}",
+        )
+        return data

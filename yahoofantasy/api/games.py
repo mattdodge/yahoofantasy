@@ -1,28 +1,49 @@
 from collections import defaultdict
 
+# Get these from this URL
+# https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=mlb;seasons=2001,2002
 games = defaultdict(dict)
 games['mlb']['2001'] = 12
-games['mlb']['2002'] = 12
-games['mlb']['2003'] = 12
-games['mlb']['2004'] = 12
-games['mlb']['2005'] = 12
-games['mlb']['2006'] = 12
-games['mlb']['2007'] = 12
-games['mlb']['2008'] = 12
-games['mlb']['2009'] = 12
-games['mlb']['2010'] = 12
-games['mlb']['2011'] = 12
-games['mlb']['2012'] = 12
-games['mlb']['2013'] = 12
-games['mlb']['2014'] = 12
-games['mlb']['2015'] = 12
-games['mlb']['2016'] = 12
-games['mlb']['2017'] = 12
-games['mlb']['2018'] = 12
+games['mlb']['2002'] = 39
+games['mlb']['2003'] = 74
+games['mlb']['2004'] = 98
+games['mlb']['2005'] = 113
+games['mlb']['2006'] = 147
+games['mlb']['2007'] = 171
+games['mlb']['2008'] = 195
+games['mlb']['2009'] = 215
+games['mlb']['2010'] = 238
+games['mlb']['2011'] = 253
+games['mlb']['2012'] = 268
+games['mlb']['2013'] = 308
+games['mlb']['2014'] = 328
+games['mlb']['2015'] = 346
+games['mlb']['2016'] = 357
+games['mlb']['2017'] = 370
+games['mlb']['2018'] = 378
 games['mlb']['2019'] = 388
 games['mlb']['2020'] = 398
+
+games['nfl']['2001'] = 57
+games['nfl']['2002'] = 49
+games['nfl']['2003'] = 79
+games['nfl']['2004'] = 101
+games['nfl']['2005'] = 124
+games['nfl']['2006'] = 153
+games['nfl']['2007'] = 175
+games['nfl']['2008'] = 199
+games['nfl']['2009'] = 222
+games['nfl']['2010'] = 242
+games['nfl']['2011'] = 257
+games['nfl']['2012'] = 273
+games['nfl']['2013'] = 314
+games['nfl']['2014'] = 331
+games['nfl']['2015'] = 348
+games['nfl']['2016'] = 359
+games['nfl']['2017'] = 371
+games['nfl']['2018'] = 380
+games['nfl']['2019'] = 390
 games['nfl']['2020'] = 399
-# TODO: Fill in years prior to 2019
 
 
 def get_game_id(game, season):

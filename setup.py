@@ -23,6 +23,8 @@ setuptools.setup(
     install_requires=reqs,
     url="https://github.com/mattdodge/yahoofantasy",
     packages=setuptools.find_packages(),
+    setup_requires=['setuptools_scm'],
+    include_package_data=True,
     entry_points='''
         [console_scripts]
         yahoofantasy=yahoofantasy.cli:yahoofantasy

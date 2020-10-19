@@ -1,6 +1,0 @@
-include *.py
-recursive-include yahoofantasy *.py
-include yahoofantasy/cli/localhost.pem
-include yahoofantasy/cli/localhost-key.pem
-include README.md
-include requirements.txt

@@ -34,7 +34,7 @@ for league in leagues:
 
 You can use the built-in `yahoofantasy` CLI to obtain an access token and refresh token for your application. Follow these steps:
 
-1. Set up your Yahoo application to have a callback/redirect URI of `http://localhost:8000`. If you already have an app that points to your local host on a different port or different path that's ok, you can customize later on.
+1. Set up your Yahoo application to have a callback/redirect URI of `https://localhost:8000`. If you already have an app that points to your local host on a different port or different path that's ok, you can customize later on.
 2. Install `yahoofantasy` if you haven't already
 ```bash
 $ pip install yahoofantasy
@@ -43,6 +43,8 @@ $ pip install yahoofantasy
 ```bash
 $ yahoofantasy login
 ```
+
+*NOTE*: If you see a browser certificate warning that is ok, proceed anyway past the warning to save your token. This warning happens because Yahoo requires an HTTPS redirect URI and the local server uses an untrusted certificate.
 
 Try `yahoofantasy login --help` for some advanced options, like customizing the port or redirect URI
 

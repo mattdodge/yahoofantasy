@@ -1,8 +1,11 @@
 import click
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
+from pathlib import Path
 import requests
-from time import time
+import ssl
+from threading import Thread
+from time import time, sleep
 from urllib.parse import urlparse, parse_qs, urlencode
 import webbrowser
 
@@ -16,10 +19,11 @@ ACCESS_CODE = None
 @click.command()
 @click.option('--client-id', default='', help='Yahoo App Client ID')
 @click.option('--client-secret', default='', help='Yahoo App Client Secret')
-@click.option('--redirect-uri', default='http://localhost:8000', help='Redirect URI')
+@click.option('--redirect-uri', default='https://localhost:8000', help='Redirect URI')
+@click.option('--redirect-http', is_flag=True, help='If specified, launch the redirect URI server using regular HTTP')
 @click.option('--listen-port', default='8000', type=int, help='Port to listen on')
 @click.option('--persist-key', default='', help='Persistence Key')
-def login(client_id, client_secret, redirect_uri, listen_port, persist_key):
+def login(client_id, client_secret, redirect_uri, redirect_http, listen_port, persist_key):
     global ACCESS_CODE
     persisted_auth_data = load('auth', default={}, ttl=-1, persist_key=persist_key)
     client_id = (
@@ -51,7 +55,15 @@ def login(client_id, client_secret, redirect_uri, listen_port, persist_key):
     webbrowser.open_new_tab(url)
     click.echo("Launching OAuth handler server on localhost:{}".format(listen_port))
     server = HTTPServer(('', listen_port), Handler)
-    server.handle_request()
+    if not redirect_http:
+        click.echo("Using localhost SSL certificate (HTTPS)")
+        server.socket = ssl.wrap_socket(server.socket,
+                                        server_side=True,
+                                        certfile=Path(__file__).parent / 'localhost.pem',
+                                        keyfile=Path(__file__).parent / 'localhost-key.pem',
+                                        ssl_version=ssl.PROTOCOL_TLS)
+    # This will serve until we get a valid access code, then it will shutdown by itself
+    server.serve_forever()
     if not ACCESS_CODE:
         error("Couldn't determine access code from URL string", exit=True)
     click.echo("Access code: {}".format(ACCESS_CODE))
@@ -84,6 +96,11 @@ def login(client_id, client_secret, redirect_uri, listen_port, persist_key):
     click.echo("Refresh Token: {}".format(refresh_token))
 
 
+def shutdown_server(server):
+    sleep(0.1)
+    server.shutdown()
+
+
 class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -93,10 +110,14 @@ class Handler(BaseHTTPRequestHandler):
             ACCESS_CODE = access_code
         except Exception:
             print("Couldn't find the access code in the query string....")
+            return
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
         self.wfile.write("Got it! You may close this tab now".encode())
+        thread = Thread(target=shutdown_server, args=(self.server, ))
+        thread.is_daemon = True
+        thread.start()
 
     def log_message(self, format, *args):
         return

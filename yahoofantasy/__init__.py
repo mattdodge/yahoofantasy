@@ -7,4 +7,4 @@ from .resources.team import Team  # noqa: F401
 from .resources.week import Week  # noqa: F401
 from .stats.stat import Stat  # noqa: F401
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'

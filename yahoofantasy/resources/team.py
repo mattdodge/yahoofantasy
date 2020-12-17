@@ -25,7 +25,7 @@ class Team():
         )
         players = []
         for p in data['fantasy_content']['team']['players']['player']:
-            player = Player()
+            player = Player(self.league)
             player = from_response_object(player, p)
             players.append(player)
         return players

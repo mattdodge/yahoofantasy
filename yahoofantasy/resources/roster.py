@@ -21,3 +21,7 @@ class Roster():
             player for player in self.players
             if player.selected_position.position not in ('BN', 'IR')
         ]
+
+    # TODO: Pre-fetch stats for all players on this roster
+    def fetch_player_stats(self):
+        pass

@@ -1,0 +1,104 @@
+import click
+from csv import DictWriter
+from datetime import datetime
+import sys
+from yahoofantasy import Context
+from .utils import warn, error
+
+import logging
+logging.basicConfig(level=logging.INFO)
+
+@click.group()
+@click.option('-o', '--output', default='out.csv')
+@click.option('-g', '--game', prompt=True, type=click.Choice(['nfl', 'mlb']))
+@click.option('-s', '--season', prompt=True, default=datetime.now().year)
+@click.pass_context
+def dump(ctx, output, game, season):
+    ctx.ensure_object(dict)
+    ctx.obj['output'] = output
+    yf_context = Context()
+    leagues = yf_context.get_leagues(game, season)
+    if len(leagues) == 1:
+        league = leagues[0]
+    else:
+        click.echo("Your leagues:")
+        for idx, league in enumerate(leagues):
+            click.echo(f" {idx + 1}) {league.name}")
+        league_num = click.prompt("Which league to use?")
+        try:
+            league = leagues[int(league_num) - 1]
+        except Exception:
+            error(f"{league_num} is an invalid selection", exit=True)
+    ctx.obj['league'] = league
+
+
+STAT_KEYS = set()
+
+
+def _player_out(week_num, player, team, att_num=1):
+    try:
+        o = {
+            'name': player.name.full,
+            'week': week_num,
+            'manager': team.manager.nickname,
+            'position': player.primary_position,
+            'roster_position': player.selected_position.position,
+            'points': player.get_points(week_num),
+        }
+        for stat in player.get_stats(week_num):
+            STAT_KEYS.add(stat.display)
+            o[stat.display] = stat.value
+        return o
+    except Exception as e:
+        if att_num > 5:
+            error(f"Failed 5 times, giving up. Returning limited data")
+            return {
+                'name': player.name.full,
+                'week': week_num,
+                'manager': team.manager.nickname,
+                'position': player.primary_position,
+                'roster_position': player.selected_position.position,
+                'points': 'N/A'
+            }
+        warn(f"Failed to fetch week {week_num} stats for {player.name.full} ({player.player_key}), trying again in 2 minutes")
+        warn("   " + str(e))
+        from time import sleep
+        sleep(120)
+        return _player_out(week_num, player, team, att_num + 1)
+
+
+def _get_results(team, week_num):
+    roster = team.roster(week_num)
+    results = []
+    for player in roster.players:
+        results.append(_player_out(week_num, player, team))
+    return results
+
+
+@dump.command()
+@click.pass_context
+def performances(ctx):
+    league = ctx.obj['league']
+    results = []
+
+    with click.progressbar(length=(league.current_week - 1) * league.num_teams,
+                           label='Fetching performances') as bar:
+        # weeks = [league.weeks()[3]]
+        for week in league.weeks():
+        # for week in weeks:
+            if week.week_num > league.current_week or week.matchups[0].status != 'postevent':
+                continue
+            for matchup in week.matchups:
+                results.extend(_get_results(matchup.team1, week.week_num))
+                bar.update(1)
+                results.extend(_get_results(matchup.team2, week.week_num))
+                bar.update(1)
+    fieldnames = ['name', 'week', 'manager', 'position', 'roster_position', 'points'] + sorted(STAT_KEYS)
+    if ctx.obj['output'] == 'stdout':
+        of = sys.stdout
+    else:
+        of = open(ctx.obj['output'], 'w+')
+    writer = DictWriter(of, fieldnames=fieldnames)
+    writer.writeheader()
+    for res in results:
+        writer.writerow(res)

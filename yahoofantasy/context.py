@@ -73,16 +73,23 @@ class Context():
             *args/**kwargs: Arguments to pass to make_request if we need to
         """
         value = self._load(persist_path, default=None)
-        if value is None:
+        persistence_miss = value is None
+        if persistence_miss:
             logger.debug("Missed on persitence for {}, "
                          "fetching from API".format(persist_path))
             value = self.make_request(*args, **kwargs)
-            self._save(persist_path, value)
         else:
             logger.debug("Using persisted value for {}".format(persist_path))
-        if return_parsed:
-            return parse_response(value)
-        return value
+        try:
+            out = parse_response(value) if return_parsed else value
+        except Exception:
+            logger.warn("Error parsing XML response")
+            logger.warn(f"Response body: {value}")
+            raise
+        # Save here so we make sure it was parseable - prevents saving error data
+        if persistence_miss:
+            self._save(persist_path, value)
+        return out
 
     def make_request(self, url, *args, **kwargs):
         if not self._access_token or time() > self._access_token_expires:

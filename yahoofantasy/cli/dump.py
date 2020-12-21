@@ -102,3 +102,48 @@ def performances(ctx):
     writer.writeheader()
     for res in results:
         writer.writerow(res)
+
+@dump.command()
+@click.pass_context
+def matchups(ctx):
+    league = ctx.obj['league']
+    results = []
+
+    with click.progressbar(length=(league.current_week - 1) * league.num_teams,
+                           label='Fetching performances') as bar:
+        for week in league.weeks():
+            if week.week_num > league.current_week or week.matchups[0].status != 'postevent':
+                continue
+            for matchup in week.matchups:
+                team1_win = matchup.teams.team[0].team_points.total > matchup.teams.team[1].team_points.total
+                results.append({
+                    'week': week.week_num,
+                    'win': team1_win,
+                    'manager': matchup.team1.manager.nickname,
+                    'points': matchup.teams.team[0].team_points.total,
+                    'proj_points': matchup.teams.team[0].team_projected_points.total,
+                    'opponent': matchup.team2.manager.nickname,
+                    'opp_points': matchup.teams.team[1].team_points.total,
+                    'opp_proj_points': matchup.teams.team[1].team_projected_points.total,
+                })
+                bar.update(1)
+                results.append({
+                    'week': week.week_num,
+                    'win': not team1_win,
+                    'manager': matchup.team2.manager.nickname,
+                    'points': matchup.teams.team[1].team_points.total,
+                    'proj_points': matchup.teams.team[1].team_projected_points.total,
+                    'opponent': matchup.team1.manager.nickname,
+                    'opp_points': matchup.teams.team[0].team_points.total,
+                    'opp_proj_points': matchup.teams.team[0].team_projected_points.total,
+                })
+                bar.update(1)
+    fieldnames = ['week', 'manager', 'win', 'points', 'proj_points', 'opponent', 'opp_points', 'opp_proj_points']
+    if ctx.obj['output'] == 'stdout':
+        of = sys.stdout
+    else:
+        of = open(ctx.obj['output'], 'w+')
+    writer = DictWriter(of, fieldnames=fieldnames)
+    writer.writeheader()
+    for res in results:
+        writer.writerow(res)

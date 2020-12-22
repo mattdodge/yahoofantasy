@@ -4,6 +4,7 @@ from yahoofantasy.util.logger import logger
 from .team import Team
 from .standings import Standings
 from .week import Week
+from .draft_result import DraftResult
 
 
 class League():
@@ -49,6 +50,19 @@ class League():
             week.sync()
             out.append(week)
         return out
+
+    def draft_results(self, persist_ttl=DEFAULT_TTL):
+        results = []
+        for team in self.teams(persist_ttl):
+            data = self.ctx._load_or_fetch(
+                'draftresults.' + team.id,
+                f'team/{team.id}/draftresults;out=players')
+            for result in data['fantasy_content']['team']['draft_results']['draft_result']:
+                dr = DraftResult(self, team)
+                from_response_object(dr, result)
+                results.append(dr)
+        return results
+
 
     def __repr__(self):
         return "League: {}".format(getattr(self, 'name', 'Unnamed League'))

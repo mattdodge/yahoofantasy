@@ -75,6 +75,17 @@ def _get_results(team, week_num):
     return results
 
 
+def _write_out(ctx, fieldnames, data):
+    if ctx.obj['output'] == 'stdout':
+        of = sys.stdout
+    else:
+        of = open(ctx.obj['output'], 'w+')
+    writer = DictWriter(of, fieldnames=fieldnames)
+    writer.writeheader()
+    for res in data:
+        writer.writerow(res)
+
+
 @dump.command()
 @click.pass_context
 def performances(ctx):
@@ -83,9 +94,7 @@ def performances(ctx):
 
     with click.progressbar(length=(league.current_week - 1) * league.num_teams,
                            label='Fetching performances') as bar:
-        # weeks = [league.weeks()[3]]
         for week in league.weeks():
-        # for week in weeks:
             if week.week_num > league.current_week or week.matchups[0].status != 'postevent':
                 continue
             for matchup in week.matchups:
@@ -94,14 +103,8 @@ def performances(ctx):
                 results.extend(_get_results(matchup.team2, week.week_num))
                 bar.update(1)
     fieldnames = ['name', 'week', 'manager', 'position', 'roster_position', 'points'] + sorted(STAT_KEYS)
-    if ctx.obj['output'] == 'stdout':
-        of = sys.stdout
-    else:
-        of = open(ctx.obj['output'], 'w+')
-    writer = DictWriter(of, fieldnames=fieldnames)
-    writer.writeheader()
-    for res in results:
-        writer.writerow(res)
+    _write_out(ctx, fieldnames, results)
+
 
 @dump.command()
 @click.pass_context
@@ -139,11 +142,22 @@ def matchups(ctx):
                 })
                 bar.update(1)
     fieldnames = ['week', 'manager', 'win', 'points', 'proj_points', 'opponent', 'opp_points', 'opp_proj_points']
-    if ctx.obj['output'] == 'stdout':
-        of = sys.stdout
-    else:
-        of = open(ctx.obj['output'], 'w+')
-    writer = DictWriter(of, fieldnames=fieldnames)
-    writer.writeheader()
-    for res in results:
-        writer.writerow(res)
+    _write_out(ctx, fieldnames, results)
+
+
+@dump.command()
+@click.pass_context
+def draftresults(ctx):
+    league = ctx.obj['league']
+    draft_results = sorted(league.draft_results(), key=lambda dr: dr.pick)
+    results = []
+    for result in draft_results:
+        results.append({
+            'pick': result.pick,
+            'round': result.round,
+            'manager': result.team.manager.nickname,
+            'player': result.player.name.full,
+            'pos': result.player.display_position,
+        })
+    fieldnames = ['pick', 'round', 'manager', 'player', 'pos']
+    _write_out(ctx, fieldnames, results)

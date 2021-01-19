@@ -38,7 +38,7 @@ class Team():
         """
         # First item is the peristence key, second is the API filter
         keys = ('live', '')
-        if week_num > 0:
+        if week_num is not None and week_num > 0:
             keys = (str(week_num), f"week={week_num}")
         data = self.ctx._load_or_fetch(
             f"team.{self.id}.roster.{keys[0]}",

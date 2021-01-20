@@ -59,7 +59,7 @@ def load(load_path, default=_DEFAULT_SINGLETON, ttl=DEFAULT_TTL, persist_key="")
                 CURRENT_PERSISTENCE.update(persisted_data)
     time_saved = get(persisted_data, load_path + '__time', 0)
     if ttl >= 0 and time_saved + ttl < time():
-        logger.info("Persistence data expired, ignoring")
+        logger.debug("Persistence data expired, ignoring")
         out = default
     else:
         out = get(persisted_data, load_path, default)

@@ -4,6 +4,7 @@ from datetime import datetime
 import pydash as _
 import sys
 from yahoofantasy import Context, Team
+from yahoofantasy.api.games import games
 from .utils import warn, error
 
 import logging
@@ -12,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 
 @click.group()
 @click.option('-o', '--output', default='stdout')
-@click.option('-g', '--game', prompt=True, type=click.Choice(['nfl', 'mlb']))
+@click.option('-g', '--game', prompt=True, type=click.Choice(games.keys()))
 @click.option('-s', '--season', prompt=True, default=datetime.now().year)
 @click.pass_context
 def dump(ctx, output, game, season):

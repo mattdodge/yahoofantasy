@@ -26,4 +26,4 @@ for week in league.weeks():
         totals[matchup.team2.manager.nickname] += get_teams_qb_points(matchup.team2, week.week_num)
 
 for team in sorted(totals, key=totals.get, reverse=True):
-    print("{:>15} {} {} {}".format(
+    print(f"{team} :: {totals[team]}")

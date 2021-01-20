@@ -17,7 +17,7 @@ You will also need a application registered on the [Yahoo Developer Site](https:
 You're going to want to start off by logging in to your Yahoo Developer application, then creating a context. This context is where all of your API requests will originate and league information will live.
 
 ```bash
-$ yahoofantasy login
+yahoofantasy login
 ```
 
 Once you've logged in, create a context and use that to make requests. For example, to fetch all of your leagues for a given game/season:
@@ -37,11 +37,11 @@ You can use the built-in `yahoofantasy` CLI to obtain an access token and refres
 1. Set up your Yahoo application to have a callback/redirect URI of `https://localhost:8000`. If you already have an app that points to your local host on a different port or different path that's ok, you can customize later on.
 2. Install `yahoofantasy` if you haven't already
 ```bash
-$ pip install yahoofantasy
+pip install yahoofantasy
 ```
 3. Log in with your Yahoo account. This command will launch a browser that will ask you to authenticate to your app. It will then store the token in a local file that can be consumed by the yahoofantasy SDK.
 ```bash
-$ yahoofantasy login
+yahoofantasy login
 ```
 
 *NOTE*: If you see a browser certificate warning that is ok, proceed anyway past the warning to save your token. This warning happens because Yahoo requires an HTTPS redirect URI and the local server uses an untrusted certificate.
@@ -70,9 +70,9 @@ for team in league.teams():
 * A **Team** has multiple **Player** objects that define their lineup. This is their current lineup and not a lineup for a given week
 ```python
 for team in league.standings():
-		players = team.players()
-		for player in players:
-				print(f"Player: {player.name.full}")
+    players = team.players()
+    for player in players:
+        print(f"Player: {player.name.full}")
 ```
 
 * A **League** has **Standings**, which is an ordered list of **Team** objects.
@@ -100,21 +100,30 @@ for team1_stat, team2_stat in zip(matchup.team1_stats, matchup.team2_stats):
 
 The full sequence of these examples can be run in the examples folder under the `readme.py` script, like so:
 ```
-$ cd examples
-$ yahoofantasy login
-$ python readme.py
+cd examples
+yahoofantasy login
+python readme.py
 ```
 
 ## Development
 
 Issues, pull requests, and contributions are more than welcome.
 
+### Unit Tests
 To run the tests, after install:
 ```bash
-$ py.test
+py.test
 ```
 
 Or to keep running tests using testmon and drop into a pdb shell on failure (my preferred mode):
 ```bash
-$ pytest-watch --pdb -- --testmon -s
+pytest-watch --pdb -- --testmon -s
+```
+
+### Releasing
+I use [bump2version](https://github.com/c4urself/bump2version) to manage version bumping. This will update the version number in the library, commit it, and create a version tag.
+
+```bash
+bump2version minor
+git push
 ```

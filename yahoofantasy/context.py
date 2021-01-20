@@ -100,7 +100,7 @@ class Context():
         """ Get a list of all leagues for a given game and season
 
         Args:
-            game (str) - the fantasy game we're looking at, must be 'mlb' for now
+            game (str) - the fantasy game we're looking at
             season (int/str) - the fantasy season to get leagues for
         """
         game_id = get_game_id(game, season)

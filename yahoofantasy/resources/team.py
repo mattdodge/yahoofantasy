@@ -48,3 +48,6 @@ class Team():
         roster = Roster(self)
         roster = from_response_object(roster, roster_data, set_raw=True)
         return roster
+
+    def __repr__(self):
+        return f"Team {self.name}"

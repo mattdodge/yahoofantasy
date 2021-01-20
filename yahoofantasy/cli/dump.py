@@ -1,15 +1,17 @@
 import click
 from csv import DictWriter
 from datetime import datetime
+import pydash as _
 import sys
-from yahoofantasy import Context
+from yahoofantasy import Context, Team
 from .utils import warn, error
 
 import logging
 logging.basicConfig(level=logging.INFO)
 
+
 @click.group()
-@click.option('-o', '--output', default='out.csv')
+@click.option('-o', '--output', default='stdout')
 @click.option('-g', '--game', prompt=True, type=click.Choice(['nfl', 'mlb']))
 @click.option('-s', '--season', prompt=True, default=datetime.now().year)
 @click.pass_context
@@ -160,4 +162,29 @@ def draftresults(ctx):
             'pos': result.player.display_position,
         })
     fieldnames = ['pick', 'round', 'manager', 'player', 'pos']
+    _write_out(ctx, fieldnames, results)
+
+
+@dump.command()
+@click.pass_context
+def transactions(ctx):
+    league = ctx.obj['league']
+    transactions = sorted(league.transactions(), key=lambda dr: dr.timestamp)
+    results = []
+    for trans in transactions:
+        for player in trans.involved_players:
+            from_team = player.from_team
+            to_team = player.to_team
+            ts = datetime.fromtimestamp(trans.timestamp)
+            results.append({
+                'type': trans.type,
+                'player_type': player.transaction_data.type,
+                'player': player.name.full,
+                'from': from_team.name if isinstance(from_team, Team) else from_team,
+                'to': to_team.name if isinstance(to_team, Team) else to_team,
+                'ts': ts.strftime('%m/%d/%Y, %H:%M:%S'),
+                'week_idx': ts.strftime('%W'),
+                'bid': _.get(trans, 'faab_bid', ''),
+            })
+    fieldnames = ['type', 'player_type', 'player', 'from', 'to', 'ts', 'week_idx', 'bid']
     _write_out(ctx, fieldnames, results)

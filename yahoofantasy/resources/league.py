@@ -5,6 +5,7 @@ from .team import Team
 from .standings import Standings
 from .week import Week
 from .draft_result import DraftResult
+from .transaction import Transaction
 
 
 class League():
@@ -63,6 +64,14 @@ class League():
                 results.append(dr)
         return results
 
+    def transactions(self, persist_ttl=DEFAULT_TTL):
+        results = []
+        data = self.ctx._load_or_fetch(
+            'transactions.' + self.id, 'transactions', league=self.id)
+        for result in data['fantasy_content']['league']['transactions']['transaction']:
+            trans = Transaction.from_response(result, self)
+            results.append(trans)
+        return results
 
     def __repr__(self):
         return "League: {}".format(getattr(self, 'name', 'Unnamed League'))

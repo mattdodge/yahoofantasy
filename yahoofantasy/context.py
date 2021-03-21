@@ -105,7 +105,7 @@ class Context():
         """
         game_id = get_game_id(game, season)
         data = self._load_or_fetch(
-            'leagues',
+            'leagues.' + str(game_id),
             'users;use_login=1/games;game_keys={}/leagues'.format(game_id))
         leagues = []
         for league_data in as_list(get(

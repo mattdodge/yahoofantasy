@@ -1,4 +1,4 @@
-# Yahoo Fantasy API Wrapper
+# 🏆 Yahoo Fantasy API Wrapper 🏆
 
 The Yahoo Fantasy Sports API is difficult to comprehend, has [this strange one-page documentation setup](https://developer.yahoo.com/fantasysports/guide/) that is hard to navigate, and seems to only want to conform to a small portion of the OAuth spec. This library/SDK makes your life easier if you want to write an app that interfaces with the Yahoo Fantasy Sports API.
 

@@ -1,8 +1,17 @@
-# Yahoo Fantasy API Wrapper
+# 🏆 Yahoo Fantasy API Wrapper 🏆
 
 The Yahoo Fantasy Sports API is difficult to comprehend, has [this strange one-page documentation setup](https://developer.yahoo.com/fantasysports/guide/) that is hard to navigate, and seems to only want to conform to a small portion of the OAuth spec. This library/SDK makes your life easier if you want to write an app that interfaces with the Yahoo Fantasy Sports API.
 
-This library will work for any Yahoo Fantasy Sports API leagues/teams. It contains some common constructs and helper methods for head-to-head MLB leagues at this time. More sports and league types are planned for the future.
+This library will, in theory, work for any Yahoo Fantasy Sports API leagues/teams. It contains some common constructs and helper methods for head-to-head leagues and the sports of NFL 🏈, MLB ⚾, and NBA 🏀 at this time. More sports and league types are planned for the future.
+
+## Table of Contents
+
+* [Installation](#installation)
+* [Basic Usage](#basic-usage)
+* [Authentication](#authentication)
+* [Concepts](#concepts)
+* [Command Line (CLI)](#command-line-cli)
+* [Development](#development)
 
 ## Installation
 
@@ -30,7 +39,7 @@ for league in leagues:
     print(league.name + " -- " + league.league_type)
 ```
 
-## Retreiving Access and Refresh Tokens
+## Authentication
 
 You can use the built-in `yahoofantasy` CLI to obtain an access token and refresh token for your application. Follow these steps:
 
@@ -105,6 +114,81 @@ yahoofantasy login
 python readme.py
 ```
 
+## Command Line (CLI)
+
+This package comes with a built in CLI to let you do some handy tasks without writing any Python code. This is useful for exporting a spreadsheet with trades in your league, player performances, etc and doing some separate analysis on them.
+
+### General Properties
+
+Each CLI command has these common properties/arguments to let you control its behavior
+
+* **-g/--game** - which sport you are exporting (e.g., nfl, mlb)
+* **-s/--season** - which season you are exporting (e.g., 2020, 2019, etc)
+* **-o/--output** - the filename of the CSV to write to, defaults to `stdout` which prints to stdout instead of to a file
+
+If you don't provide these parameters you will be prompted for the required ones when you run your command. 
+These parameters must be provided after the `dump` command but before the type of export you want to complete. For example:
+```bash
+yahoofantasy dump -g nfl -s 2020 -o path/to/output.csv performances
+```
+
+### Types of Exports
+
+#### Player Performances
+
+Dumps a CSV with every player that was owned for every week and their stats.
+
+```bash
+yahoofantasy dump performances
+```
+
+Simplified output example:
+| name | week | manager | position | points | Pass TD | Rush Yds |
+|-|-|-|-|-|-|-|
+| Drew Brees | 1 | Manager Name | QB | 16.4 | 2 | 2 |
+| Dalvin Cook | 1 | Manager | RB | 21.3 | 0 | 50 |
+
+#### Matchups
+
+In a head-to-head league, a CSV dump of all manager matchups from the season
+
+```bash
+yahoofantasy dump matchups
+```
+
+Simplified output example:
+| week | manager | win | points | proj_points | opponent | opp_points | opp_proj_points |
+|-|-|-|-|-|-|-|-|
+| 1 | Manager 1 | False | 90.0 | 133.55 | Manager 2 | 142.68 | 136.79 |
+| 1 | Manager 2 | True | 142.68 | 136.79 | Manager 1 | 90.0 | 133.55 |
+
+#### Draft Results
+
+A CSV dump of every draft pick
+
+```bash
+yahoofantasy dump draftresults
+```
+
+Simplified output example:
+| pick | round | manager | player | pos |
+|-|-|-|-|-|
+| 1 | 1 | Manager 1 | Christian McCaffrey | RB |
+| 2 | 1 | Manager 2 | Saquon Barkley | RB |
+
+#### Transactions
+
+A CSV dump of every transaction made for a season. Includes trades, adds, drops, and commissioner moves
+
+```bash
+yahoofantasy dump transactions
+```
+
+Simplified output example:
+| type | player_type | player | from | to | ts | week_idx | bid |
+|-|-|-|-|-|-|-|-|
+| drop | drop | Damien Harris | Elementary Mr Watson | waivers | 09/09/2020, 20:57:15 | 36 |  |
+| add/drop | add | James Robinson | waivers | Kittles taste the ðŸŒˆ | 09/11/2020, 00:22:20 | 36 |  |
 ## Development
 
 Issues, pull requests, and contributions are more than welcome.

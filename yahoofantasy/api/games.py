@@ -23,6 +23,7 @@ games['mlb']['2017'] = 370
 games['mlb']['2018'] = 378
 games['mlb']['2019'] = 388
 games['mlb']['2020'] = 398
+games['mlb']['2021'] = 404
 
 games['nfl']['2001'] = 57
 games['nfl']['2002'] = 49
@@ -44,6 +45,7 @@ games['nfl']['2017'] = 371
 games['nfl']['2018'] = 380
 games['nfl']['2019'] = 390
 games['nfl']['2020'] = 399
+games['nfl']['2021'] = 406
 
 games['nba']['2001'] = 16
 games['nba']['2002'] = 67
@@ -65,6 +67,7 @@ games['nba']['2017'] = 375
 games['nba']['2018'] = 385
 games['nba']['2019'] = 395
 games['nba']['2020'] = 402
+games['nba']['2021'] = 410
 
 
 def get_game_id(game, season):

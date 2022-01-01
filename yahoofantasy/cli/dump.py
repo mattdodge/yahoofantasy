@@ -116,7 +116,7 @@ def matchups(ctx):
     results = []
 
     with click.progressbar(length=(league.current_week - 1) * league.num_teams,
-                           label='Fetching performances') as bar:
+                           label='Fetching matchups') as bar:
         for week in league.weeks():
             if week.week_num > league.current_week or week.matchups[0].status != 'postevent':
                 continue

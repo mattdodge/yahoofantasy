@@ -99,6 +99,7 @@ def performances(ctx):
                            label='Fetching performances') as bar:
         for week in league.weeks():
             if week.week_num > league.current_week or week.matchups[0].status != 'postevent':
+                bar.update(league.num_teams)
                 continue
             for matchup in week.matchups:
                 results.extend(_get_results(matchup.team1, week.week_num))
@@ -119,6 +120,7 @@ def matchups(ctx):
                            label='Fetching matchups') as bar:
         for week in league.weeks():
             if week.week_num > league.current_week or week.matchups[0].status != 'postevent':
+                bar.update(league.num_teams)
                 continue
             for matchup in week.matchups:
                 team1_win = matchup.teams.team[0].team_points.total > matchup.teams.team[1].team_points.total

@@ -38,14 +38,14 @@ class Team():
         """
         # First item is the peristence key, second is the API filter
         keys = ('live', '')
-        if week_num is not None and week_num > 0:
+        if week_num:
             keys = (str(week_num), f"week={week_num}")
         data = self.ctx._load_or_fetch(
             f"team.{self.id}.roster.{keys[0]}",
             f"team/{self.id}/roster;{keys[1]}",
         )
         roster_data = data['fantasy_content']['team']['roster']
-        roster = Roster(self)
+        roster = Roster(self, week_num)
         roster = from_response_object(roster, roster_data, set_raw=True)
         return roster
 

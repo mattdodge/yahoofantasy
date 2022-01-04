@@ -72,6 +72,12 @@ def _player_out(week_num, player, team, att_num=1):
 
 def _get_results(team, week_num):
     roster = team.roster(week_num)
+    try:
+        roster.fetch_player_stats()  # pre-fetch some stats to save time
+    except Exception:
+        # TODO: Handle rate limiting here too, the requests moved here instead
+        # of in _player_out like they used to be now that we prefetch stats
+        error("Failed to fetch player stats, this might be due to rate limiting. Try again in 5 minutes")
     results = []
     for player in roster.players:
         results.append(_player_out(week_num, player, team))

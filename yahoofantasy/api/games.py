@@ -24,6 +24,7 @@ games['mlb']['2018'] = 378
 games['mlb']['2019'] = 388
 games['mlb']['2020'] = 398
 games['mlb']['2021'] = 404
+games['mlb']['2022'] = 412
 
 games['nfl']['2001'] = 57
 games['nfl']['2002'] = 49

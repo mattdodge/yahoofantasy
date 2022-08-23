@@ -81,3 +81,13 @@ def get_game_id(game, season):
         raise ValueError(
             "{} is not a valid season for {}".format(season, game))
     return games[game][season]
+
+def _find_game_id(game, season, context):
+    """ Pass a valid yahoofantasy context and return the game ID
+
+    This is a useful function for debuging or discovering a new game ID
+    """
+    from yahoofantasy.api.parse import parse_response
+    from pydash import get
+    resp = context.make_request(f"games;game_codes={game};seasons={season}")
+    return get(parse_response(resp), 'fantasy_content.games.game.game_key.$')

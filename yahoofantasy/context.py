@@ -64,7 +64,7 @@ class Context():
         """ A shortcut to save data to persistence for this context """
         return save(persist_path, persist_val, persist_key=self._persist_key)
 
-    def _load_or_fetch(self, persist_path, *args, return_parsed=True, **kwargs):
+    def _load_or_fetch(self, persist_path, *args, return_parsed=True, persist_ttl=DEFAULT_TTL, **kwargs):
         """ A shortcut to try loading from persistence but fetching if we miss
 
         Args:
@@ -72,7 +72,7 @@ class Context():
             return_parsed (bool): Whether to return the parsed XML. Raw data is persisted
             *args/**kwargs: Arguments to pass to make_request if we need to
         """
-        value = self._load(persist_path, default=None)
+        value = self._load(persist_path, default=None, ttl=persist_ttl)
         persistence_miss = value is None
         if persistence_miss:
             logger.debug("Missed on persitence for {}, "
@@ -106,7 +106,9 @@ class Context():
         game_id = get_game_id(game, season)
         data = self._load_or_fetch(
             'leagues.' + str(game_id),
-            'users;use_login=1/games;game_keys={}/leagues'.format(game_id))
+            'users;use_login=1/games;game_keys={}/leagues'.format(game_id),
+            persist_ttl=persist_ttl,
+        )
         leagues = []
         for league_data in as_list(get(
                 data, 'fantasy_content.users.user.games.game.leagues.league')):

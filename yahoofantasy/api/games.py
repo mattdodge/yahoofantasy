@@ -47,6 +47,7 @@ games['nfl']['2018'] = 380
 games['nfl']['2019'] = 390
 games['nfl']['2020'] = 399
 games['nfl']['2021'] = 406
+games['nfl']['2022'] = 414
 
 games['nba']['2001'] = 16
 games['nba']['2002'] = 67
@@ -69,6 +70,7 @@ games['nba']['2018'] = 385
 games['nba']['2019'] = 395
 games['nba']['2020'] = 402
 games['nba']['2021'] = 410
+games['nba']['2022'] = 418
 
 
 def get_game_id(game, season):

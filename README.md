@@ -78,7 +78,7 @@ for team in league.teams():
 
 * A **Team** has multiple **Player** objects that define their lineup. This is their current lineup and not a lineup for a given week
 ```python
-for team in league.standings():
+for team in league.teams():
     players = team.players()
     for player in players:
         print(f"Player: {player.name.full}")

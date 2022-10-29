@@ -198,6 +198,14 @@ A command is available to drop you into a Python interpreter with access to your
 yahoofantasy shell
 ```
 
+### Clearing cache
+
+The yahoofantasy library maintains its own persisted cache of certain Yahoo! API responses. This cuts down on the number of requests that need to be made and makes future function calls faster. Occasionally you may want to clear this cache but not lose your authentication data. You can do so by running the following CLI command from your yahoofantasy project directory:
+
+```bash
+yahoofantasy clear-cache
+```
+
 ## Development
 
 Issues, pull requests, and contributions are more than welcome.

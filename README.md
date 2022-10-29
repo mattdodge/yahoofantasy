@@ -189,6 +189,15 @@ Simplified output example:
 |-|-|-|-|-|-|-|-|
 | drop | drop | Damien Harris | Elementary Mr Watson | waivers | 09/09/2020, 20:57:15 | 36 |  |
 | add/drop | add | James Robinson | waivers | Kittles taste the ðŸŒˆ | 09/11/2020, 00:22:20 | 36 |  |
+
+### Shell (Python interpreter)
+
+A command is available to drop you into a Python interpreter with access to your `Context` object as the `ctx` variable. From the directory where you ran `yahoofantasy login` you can run:
+
+```bash
+yahoofantasy shell
+```
+
 ## Development
 
 Issues, pull requests, and contributions are more than welcome.

@@ -13,13 +13,14 @@ def make_request(url, token, league=False, **kwargs):
         headers={
             "Authorization": "Bearer {}".format(token),
             "User-Agent": "Mozilla/5.0",
-        }
+        },
     )
 
     try:
         resp.raise_for_status()
     except Exception:
-        logger.exception("Bad response status ({}) for request".format(
-            resp.status_code))
+        logger.exception(
+            "Bad response status ({}) for request".format(resp.status_code)
+        )
         raise
     return resp.text

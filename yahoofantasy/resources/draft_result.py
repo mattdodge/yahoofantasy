@@ -1,8 +1,7 @@
 from yahoofantasy.resources.player import Player
 
 
-class DraftResult():
-
+class DraftResult:
     def __init__(self, league, team):
         self.league = league
         self.team = team

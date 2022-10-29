@@ -4,30 +4,31 @@ from .team import Team
 
 
 # A player involved in a transaction
-class TransactionPlayer():
-
+class TransactionPlayer:
     def __init__(self, transaction):
         self.transaction = transaction
 
     @property
     def from_team(self):
-        if self.transaction_data.source_type == 'team':
+        if self.transaction_data.source_type == "team":
             team = Team(
                 self.transaction.league.ctx,
                 self.transaction.league,
-                self.transaction_data.source_team_key)
-            setattr(team, 'name', self.transaction_data.source_team_name)
+                self.transaction_data.source_team_key,
+            )
+            setattr(team, "name", self.transaction_data.source_team_name)
             return team
         return self.transaction_data.source_type
 
     @property
     def to_team(self):
-        if self.transaction_data.destination_type == 'team':
+        if self.transaction_data.destination_type == "team":
             team = Team(
                 self.transaction.league.ctx,
                 self.transaction.league,
-                self.transaction_data.destination_team_key)
-            setattr(team, 'name', self.transaction_data.destination_team_name)
+                self.transaction_data.destination_team_key,
+            )
+            setattr(team, "name", self.transaction_data.destination_team_name)
             return team
         return self.transaction_data.destination_type
 
@@ -35,8 +36,7 @@ class TransactionPlayer():
         return f"{self.transaction_data.type} {self.name.full} from {self.from_team} to {self.to_team}"
 
 
-class Transaction():
-
+class Transaction:
     def __init__(self, league):
         self.league = league
         self.involved_players = []
@@ -50,7 +50,7 @@ class Transaction():
     @staticmethod
     def from_response(resp, league):
         trans = from_response_object(Transaction(league), resp)
-        for player in as_list(_.get(trans, 'players.player', [])):
+        for player in as_list(_.get(trans, "players.player", [])):
             tp = TransactionPlayer(trans)
             from_response_object(tp, player.__dict__)
             trans.involved_players.append(tp)

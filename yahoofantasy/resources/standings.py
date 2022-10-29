@@ -1,7 +1,4 @@
-
-
-class Standings():
-
+class Standings:
     def __init__(self, ctx, league, team_id):
         self.ctx = ctx
         self.league = league

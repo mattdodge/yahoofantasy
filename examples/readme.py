@@ -7,7 +7,7 @@ from yahoofantasy import Context
 ctx = Context()
 
 # Get all baseball leagues I belonged to in 2019
-for league in ctx.get_leagues('mlb', 2019):
+for league in ctx.get_leagues("mlb", 2019):
     print("~~~~~~~~ LEAGUE ~~~~~~~~")
     print(f"{league.id} - {league.name} ({league.league_type})")
     print()
@@ -22,7 +22,9 @@ for league in ctx.get_leagues('mlb', 2019):
     for team in league.teams():
         print(f"Team Name: {team.name}\tManager: {team.manager.nickname}")
         for player in team.players():
-            print(f"  {player.name.full} ({player.display_position} - {player.editorial_team_abbr})")
+            print(
+                f"  {player.name.full} ({player.display_position} - {player.editorial_team_abbr})"
+            )
         print()
     print()
 
@@ -30,8 +32,10 @@ for league in ctx.get_leagues('mlb', 2019):
     print("~~~~~~~~ STANDINGS ~~~~~~~~")
     for team in league.standings():
         outcomes = team.team_standings.outcome_totals
-        print(f"#{team.team_standings.rank}\t{team.name}\t"
-              f"({outcomes.wins}-{outcomes.losses}-{outcomes.ties})")
+        print(
+            f"#{team.team_standings.rank}\t{team.name}\t"
+            f"({outcomes.wins}-{outcomes.losses}-{outcomes.ties})"
+        )
     print()
 
     print("~~~~~~~~ WEEK 3 ~~~~~~~~")

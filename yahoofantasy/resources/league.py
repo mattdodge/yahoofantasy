@@ -1,3 +1,4 @@
+from yahoofantasy.api.games import get_game_id
 from yahoofantasy.api.parse import from_response_object, get_value
 from yahoofantasy.util.persistence import DEFAULT_TTL
 from yahoofantasy.util.logger import logger
@@ -74,4 +75,48 @@ class League():
         return results
 
     def __repr__(self):
-        return "League: {}".format(getattr(self, 'name', 'Unnamed League'))
+        return "League: {}".format(getattr(self, "name", "Unnamed League"))
+
+    @property
+    def past_league_id(self):
+        """Get this league's previous year's league ID and game code
+
+        If the commissioner has configured this, return a tuple of
+        (game_code, league_id) for the previous season for this league
+
+        Returns None if the league is not configured for league history
+
+        Example:
+        >>> lg = ctx.get_leagues('mlb', 2022)[0]
+        >>> lg.past_league_id
+        (404, 12345)
+
+        404 represents the MLB game code for 2021, 12345 is the league ID
+        """
+        full_league_key = getattr(self, "renew", None)
+        if not full_league_key:
+            return None
+        full_league_key = str(full_league_key)
+        # Full league keys are a combination of the game code and the league ID
+        # In the raw response they look like 333_12345 where 333 is the game code and
+        # 12345 is the league ID. However, due to how python ignores underscores in
+        # numbers, specifically in the XML parsing library, it will come through as
+        # a single integer that looks like 33312345
+        # We can make an educated guess about what the league ID actually is though
+        # given reasonable game codes based on our current league. We'll do that here
+        current_season = self.season
+        while True:
+            try:
+                last_years_game_code = get_game_id(self.game_code, current_season - 1)
+            except ValueError:
+                # We don't have any information about the previous year, give up
+                return None
+            last_years_game_code = str(last_years_game_code)
+            if full_league_key.startswith(last_years_game_code):
+                return (
+                    int(last_years_game_code),
+                    int(full_league_key[len(last_years_game_code) :]),
+                )
+            else:
+                # Try the previous year
+                current_season -= 1

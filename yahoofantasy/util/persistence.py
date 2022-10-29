@@ -1,3 +1,4 @@
+from copy import copy
 from pydash import set_, get
 from yahoofantasy.util.logger import logger
 from os.path import isfile
@@ -17,7 +18,7 @@ def get_persistence_filename(persist_key):
 
 
 def save(save_path, save_val, persist_key="", overwrite=False):
-    """ Save a key/value pair to persistence
+    """Save a key/value pair to persistence
 
     Args:
         save_path: A pydash path to where the data should be saved
@@ -66,3 +67,14 @@ def load(load_path, default=_DEFAULT_SINGLETON, ttl=DEFAULT_TTL, persist_key="")
     if out is _DEFAULT_SINGLETON:
         raise ValueError("Path {} not found in persistence".format(load_path))
     return out
+
+
+def clear(ignore_keys=[], persist_key=""):
+    out = copy(CURRENT_PERSISTENCE)
+    for key in CURRENT_PERSISTENCE.keys():
+        if key in ignore_keys or key.replace("__time", "") in ignore_keys:
+            continue
+        del out[key]
+    filename = get_persistence_filename(persist_key)
+    with open(filename, "wb") as fp:
+        pickle.dump(out, fp)

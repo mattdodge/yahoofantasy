@@ -71,10 +71,12 @@ def load(load_path, default=_DEFAULT_SINGLETON, ttl=DEFAULT_TTL, persist_key="")
 
 def clear(ignore_keys=[], persist_key=""):
     out = copy(CURRENT_PERSISTENCE)
-    for key in CURRENT_PERSISTENCE.keys():
+    for key in list(CURRENT_PERSISTENCE.keys()):
         if key in ignore_keys or key.replace("__time", "") in ignore_keys:
             continue
         del out[key]
+        # Also clear the in-memory persistence cache
+        del CURRENT_PERSISTENCE[key]
     filename = get_persistence_filename(persist_key)
     with open(filename, "wb") as fp:
         pickle.dump(out, fp)

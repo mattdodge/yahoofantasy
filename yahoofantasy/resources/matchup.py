@@ -26,6 +26,6 @@ class Matchup:
 
     def _get_matchup_team_stats(self, matchup_team):
         if hasattr(matchup_team, "team_stats"):
-            return [Stat.from_value(d) for d in matchup_team.team_stats.stats.stat]
+            return [Stat.from_value(d, self.league.game_code) for d in matchup_team.team_stats.stats.stat]
         else:
             raise RuntimeError("Matchup does not contain individual stats")

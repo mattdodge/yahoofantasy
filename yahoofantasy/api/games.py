@@ -72,12 +72,34 @@ games["nba"]["2020"] = 402
 games["nba"]["2021"] = 410
 games["nba"]["2022"] = 418
 
+games["nhl"]["2001"] = 15
+games["nhl"]["2002"] = 64
+games["nhl"]["2003"] = 94
+games["nhl"]["2004"] = 111
+games["nhl"]["2005"] = 130
+games["nhl"]["2006"] = 164
+games["nhl"]["2007"] = 186
+games["nhl"]["2008"] = 210
+games["nhl"]["2009"] = 233
+games["nhl"]["2010"] = 248
+games["nhl"]["2011"] = 263
+games["nhl"]["2012"] = 303
+games["nhl"]["2013"] = 321
+games["nhl"]["2014"] = 341
+games["nhl"]["2015"] = 352
+games["nhl"]["2016"] = 363
+games["nhl"]["2017"] = 376
+games["nhl"]["2018"] = 386
+games["nhl"]["2019"] = 396
+games["nhl"]["2020"] = 403
+games["nhl"]["2021"] = 411
+games["nhl"]["2022"] = 419
 
 def get_game_id(game, season):
     season = str(season)
     if game not in games:
         raise ValueError(
-            "{} is not a valid game, must be 'mlb', 'nba' or 'nfl'".format(game)
+            "{} is not a valid game, must be 'mlb', 'nba', 'nhl' or 'nfl'".format(game)
         )
     if season not in games[game]:
         raise ValueError("{} is not a valid season for {}".format(season, game))

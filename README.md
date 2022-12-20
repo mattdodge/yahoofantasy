@@ -2,7 +2,7 @@
 
 The Yahoo Fantasy Sports API is difficult to comprehend, has [this strange one-page documentation setup](https://developer.yahoo.com/fantasysports/guide/) that is hard to navigate, and seems to only want to conform to a small portion of the OAuth spec. This library/SDK makes your life easier if you want to write an app that interfaces with the Yahoo Fantasy Sports API.
 
-This library will, in theory, work for any Yahoo Fantasy Sports API leagues/teams. It contains some common constructs and helper methods for head-to-head leagues and the sports of NFL 🏈, MLB ⚾, and NBA 🏀 at this time. More sports and league types are planned for the future.
+This library will work for any Yahoo Fantasy Sports API leagues/teams. It contains some common constructs and helper methods for head-to-head leagues for the NFL 🏈, MLB ⚾, NHL 🏒 and NBA 🏀.
 
 ## Table of Contents
 

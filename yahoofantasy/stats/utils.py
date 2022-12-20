@@ -1,11 +1,13 @@
 from .mlb import stats as stats_mlb
 from .nfl import stats as stats_nfl
 from .nba import stats as stats_nba
+from .nhl import stats as stats_nhl
 
 league_types = {
     "mlb": stats_mlb,
     "nfl": stats_nfl,
     "nba": stats_nba,
+    "nhl": stats_nhl
 }
 
 

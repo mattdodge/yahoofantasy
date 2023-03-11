@@ -3,6 +3,7 @@ from csv import DictWriter
 from datetime import datetime
 import pydash as _
 import sys
+from time import sleep
 from yahoofantasy import Context, Team
 from yahoofantasy.api.games import games
 from .utils import warn, error
@@ -68,22 +69,20 @@ def _player_out(week_num, player, team, att_num=1):
             f"Failed to fetch week {week_num} stats for {player.name.full} ({player.player_key}), trying again in 2 minutes"
         )
         warn("   " + str(e))
-        from time import sleep
-
         sleep(120)
         return _player_out(week_num, player, team, att_num + 1)
 
 
 def _get_results(team, week_num):
-    roster = team.roster(week_num)
     try:
+        roster = team.roster(week_num)
         roster.fetch_player_stats()  # pre-fetch some stats to save time
     except Exception:
-        # TODO: Handle rate limiting here too, the requests moved here instead
-        # of in _player_out like they used to be now that we prefetch stats
         error(
-            "Failed to fetch player stats, this might be due to rate limiting. Try again in 5 minutes"
+            "Failed to fetch player stats, this might be due to rate limiting. Trying again in 2 minutes"
         )
+        sleep(120)
+        return _get_results(team, week_num)
     results = []
     for player in roster.players:
         results.append(_player_out(week_num, player, team))

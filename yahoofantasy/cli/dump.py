@@ -46,6 +46,7 @@ def _player_out(week_num, player, team, att_num=1):
             "name": player.name.full,
             "week": week_num,
             "manager": team.manager.nickname,
+            "team_id": team.id,
             "position": player.primary_position,
             "roster_position": player.selected_position.position,
             "points": player.get_points(week_num),
@@ -56,11 +57,12 @@ def _player_out(week_num, player, team, att_num=1):
         return o
     except Exception as e:
         if att_num > 5:
-            error(f"Failed 5 times, giving up. Returning limited data")
+            error("Failed 5 times, giving up. Returning limited data")
             return {
                 "name": player.name.full,
                 "week": week_num,
                 "manager": team.manager.nickname,
+                "team_id": team.id,
                 "position": player.primary_position,
                 "roster_position": player.selected_position.position,
                 "points": "N/A",
@@ -126,6 +128,7 @@ def performances(ctx):
         "name",
         "week",
         "manager",
+        "team_id",
         "position",
         "roster_position",
         "points",

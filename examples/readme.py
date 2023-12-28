@@ -12,6 +12,11 @@ for league in ctx.get_leagues("mlb", 2019):
     print(f"{league.id} - {league.name} ({league.league_type})")
     print()
 
+    print("~~~~~~~~ LEAGUE PLAYERS ~~~~~~~~")
+    for player in league.players():
+        print(f"{player.name.full} - {player.display_position} - {player.editorial_team_abbr}")
+    print()
+
     # Iterate through standings and show every team's win/loss record
     print("~~~~~~~~ TEAMS ~~~~~~~~")
     for team in league.teams():

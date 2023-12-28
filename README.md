@@ -66,7 +66,16 @@ There is a general hierarchy that head-to-head leagues will follow. This hierarc
 for league in ctx.get_leagues('mlb', 2019):
     print(f"{league.id} - {league.name} ({league.league_type})")
 ```
-    
+
+* A **League** will contain multiple **Player** objects.
+```python
+from yahoofantasy import League
+
+league = League(ctx, '388.l.25000')  # Use a manual league ID or get it from league.id above
+for player in league.players():
+    print(f"{player.name.full} - {player.display_position} - {player.editorial_team_abbr}")
+```
+
 * A **League** will contain multiple **Team** objects.
 ```python
 from yahoofantasy import League

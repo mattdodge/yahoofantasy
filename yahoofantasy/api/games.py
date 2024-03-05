@@ -26,6 +26,7 @@ games["mlb"]["2020"] = 398
 games["mlb"]["2021"] = 404
 games["mlb"]["2022"] = 412
 games["mlb"]["2023"] = 422
+games["mlb"]["2024"] = 431
 
 games["nfl"]["2001"] = 57
 games["nfl"]["2002"] = 49

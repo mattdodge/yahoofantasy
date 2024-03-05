@@ -7,13 +7,13 @@ from .standings import Standings
 from .week import Week
 from .draft_result import DraftResult
 from .transaction import Transaction
+from .player import Player
 
 
 class League:
     def __init__(self, ctx, league_id):
         self.ctx = ctx
         self.id = league_id
-        self.players = list()
 
     def get_team(self, team_key):
         return next((t for t in self.teams() if t.team_key == team_key), None)
@@ -27,6 +27,21 @@ class League:
             from_response_object(t, team)
             teams.append(t)
         return teams
+
+    def players(self, persist_ttl=DEFAULT_TTL):
+        logger.debug("Looking up players")
+        START = 0
+        COUNT = 25
+        data = self.ctx._load_or_fetch(f"players.{self.id}.{START}", f"players;count={COUNT};start={START}", league=self.id)
+        players = []
+        while "player" in data["fantasy_content"]["league"]["players"]:
+            for player in data["fantasy_content"]["league"]["players"]["player"]:
+                p = Player(self)
+                from_response_object(p, player)
+                players.append(p)
+            START += COUNT
+            data = self.ctx._load_or_fetch(f"players.{self.id}.{START}", f"players;count={COUNT};start={START}", league=self.id)
+        return players
 
     def standings(self, persist_ttl=DEFAULT_TTL):
         logger.debug("Looking up standings")

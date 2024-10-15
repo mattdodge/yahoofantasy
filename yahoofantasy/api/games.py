@@ -76,6 +76,7 @@ games["nba"]["2020"] = 402
 games["nba"]["2021"] = 410
 games["nba"]["2022"] = 418
 games["nba"]["2023"] = 428
+games["nba"]["2024"] = 454
 
 games["nhl"]["2001"] = 15
 games["nhl"]["2002"] = 64

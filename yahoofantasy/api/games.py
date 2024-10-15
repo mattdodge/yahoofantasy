@@ -100,6 +100,7 @@ games["nhl"]["2020"] = 403
 games["nhl"]["2021"] = 411
 games["nhl"]["2022"] = 419
 games["nhl"]["2023"] = 427
+games["nhl"]["2024"] = 453
 
 
 def get_game_id(game, season):

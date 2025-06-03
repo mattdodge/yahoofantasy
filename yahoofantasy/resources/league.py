@@ -58,12 +58,9 @@ class League:
             optional_params['status'] = status
 
         def build_query(start):
-            base_params = f"count={COUNT};start={start}"
-            if optional_params:
-                optional_str = ";".join(f"{k}={v}" for k, v in optional_params.items())
-                return f"players;{base_params};{optional_str}"
-            else:
-                return f"players;{base_params}"
+            params = {"count": COUNT, "start": start, **optional_params}
+            params_str = ";".join(f"{k}={v}" for k, v in params.items())
+            return f"players;{params_str}"
             
         def build_cache_key(start):
             base_key = f"players.{self.id}"

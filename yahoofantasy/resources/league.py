@@ -31,7 +31,7 @@ class League:
     def players(self, status=None, persist_ttl=DEFAULT_TTL):
         """
         Retrieve players for a given league context.
-        
+
         Args:
             status: Optional player status filter. Default value is None for all players. Valid Values:
                 - 'A': All Available Players
@@ -46,22 +46,24 @@ class League:
         """
         logger.debug("Looking up players")
 
-        VALID_STATUSES = {'A', 'FA', 'W', 'T', 'K'}
+        VALID_STATUSES = {"A", "FA", "W", "T", "K"}
         if status is not None and status not in VALID_STATUSES:
-            raise ValueError(f"Invalid status given. Must be one of the following: {', '.join(sorted(VALID_STATUSES))}")
-        
+            raise ValueError(
+                f"Invalid status given. Must be one of the following: {', '.join(sorted(VALID_STATUSES))}"
+            )
+
         START = 0
         COUNT = 25
 
         optional_params = {}
         if status is not None:
-            optional_params['status'] = status
+            optional_params["status"] = status
 
         def build_query(start):
             params = {"count": COUNT, "start": start, **optional_params}
             params_str = ";".join(f"{k}={v}" for k, v in params.items())
             return f"players;{params_str}"
-            
+
         def build_cache_key(start):
             base_key = f"players.{self.id}"
             if optional_params:
@@ -70,7 +72,9 @@ class League:
             else:
                 return f"{base_key}.{start}"
 
-        data = self.ctx._load_or_fetch(build_cache_key(START), build_query(START), league=self.id)
+        data = self.ctx._load_or_fetch(
+            build_cache_key(START), build_query(START), league=self.id
+        )
 
         players = []
         while "player" in data["fantasy_content"]["league"]["players"]:
@@ -80,7 +84,9 @@ class League:
                 players.append(p)
             START += COUNT
 
-            data = self.ctx._load_or_fetch(build_cache_key(START), build_query(START), league=self.id)
+            data = self.ctx._load_or_fetch(
+                build_cache_key(START), build_query(START), league=self.id
+            )
         return players
 
     def standings(self, persist_ttl=DEFAULT_TTL):

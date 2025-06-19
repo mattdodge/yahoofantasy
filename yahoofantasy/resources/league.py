@@ -28,11 +28,50 @@ class League:
             teams.append(t)
         return teams
 
-    def players(self, persist_ttl=DEFAULT_TTL):
+    def players(self, status=None, persist_ttl=DEFAULT_TTL):
+        """
+        Retrieve players for a given league context.
+        
+        Args:
+            status: Optional player status filter. Default value is None for all players. Valid Values:
+                - 'A': All Available Players
+                - 'FA': Free Agents
+                - 'W': Waivers only
+                - 'T': Taken players only
+                - 'K': Keepers only
+
+        Returns:
+            List of player objects
+
+        """
         logger.debug("Looking up players")
+
+        VALID_STATUSES = {'A', 'FA', 'W', 'T', 'K'}
+        if status is not None and status not in VALID_STATUSES:
+            raise ValueError(f"Invalid status given. Must be one of the following: {', '.join(sorted(VALID_STATUSES))}")
+        
         START = 0
         COUNT = 25
-        data = self.ctx._load_or_fetch(f"players.{self.id}.{START}", f"players;count={COUNT};start={START}", league=self.id)
+
+        optional_params = {}
+        if status is not None:
+            optional_params['status'] = status
+
+        def build_query(start):
+            params = {"count": COUNT, "start": start, **optional_params}
+            params_str = ";".join(f"{k}={v}" for k, v in params.items())
+            return f"players;{params_str}"
+            
+        def build_cache_key(start):
+            base_key = f"players.{self.id}"
+            if optional_params:
+                param_key = ".".join(f"{v}" for v in optional_params.values())
+                return f"{base_key}.{param_key}.{start}"
+            else:
+                return f"{base_key}.{start}"
+
+        data = self.ctx._load_or_fetch(build_cache_key(START), build_query(START), league=self.id)
+
         players = []
         while "player" in data["fantasy_content"]["league"]["players"]:
             for player in data["fantasy_content"]["league"]["players"]["player"]:
@@ -40,7 +79,8 @@ class League:
                 from_response_object(p, player)
                 players.append(p)
             START += COUNT
-            data = self.ctx._load_or_fetch(f"players.{self.id}.{START}", f"players;count={COUNT};start={START}", league=self.id)
+
+            data = self.ctx._load_or_fetch(build_cache_key(START), build_query(START), league=self.id)
         return players
 
     def standings(self, persist_ttl=DEFAULT_TTL):

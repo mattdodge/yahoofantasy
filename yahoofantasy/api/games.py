@@ -53,6 +53,7 @@ games["nfl"]["2021"] = 406
 games["nfl"]["2022"] = 414
 games["nfl"]["2023"] = 423
 games["nfl"]["2024"] = 449
+games["nfl"]["2025"] = 461
 
 games["nba"]["2001"] = 16
 games["nba"]["2002"] = 67

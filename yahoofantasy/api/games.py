@@ -79,6 +79,7 @@ games["nba"]["2021"] = 410
 games["nba"]["2022"] = 418
 games["nba"]["2023"] = 428
 games["nba"]["2024"] = 454
+games["nba"]["2025"] = 466
 
 games["nhl"]["2001"] = 15
 games["nhl"]["2002"] = 64
@@ -104,6 +105,7 @@ games["nhl"]["2021"] = 411
 games["nhl"]["2022"] = 419
 games["nhl"]["2023"] = 427
 games["nhl"]["2024"] = 453
+games["nhl"]["2025"] = 465
 
 
 def get_game_id(game, season):

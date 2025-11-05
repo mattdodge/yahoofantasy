@@ -601,8 +601,7 @@ wheels = [
 
 [[package]]
 name = "yahoofantasy"
-version = "1.4.9"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "colorama" },
@@ -635,7 +634,7 @@ requires-dist = [
 dev = [
     { name = "coverage", specifier = ">=5.0.4" },
     { name = "flake8", specifier = ">=3.7.9" },
-    { name = "pytest", specifier = ">=5.4.1" },
+    { name = "pytest", specifier = ">=7" },
     { name = "pytest-cov", specifier = ">=2.8.1" },
     { name = "pytest-testmon", specifier = ">=1.0.2" },
     { name = "pytest-watch", specifier = ">=4.2.0" },

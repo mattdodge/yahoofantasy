@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "yahoofantasy"
-version = "1.4.9"
+dynamic = ["version"]
 description = "An SDK for the Yahoo! Fantasy Sports API"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -11,6 +15,12 @@ dependencies = [
     "requests>=2.32.5",
     "xmljson>=0.2.1",
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "yahoofantasy.__version__"}
+
+[project.scripts]
+yahoofantasy = "yahoofantasy.cli:yahoofantasy"
 
 [dependency-groups]
 dev = [

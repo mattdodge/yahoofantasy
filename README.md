@@ -231,9 +231,9 @@ pytest-watch --pdb -- --testmon -s
 ```
 
 ### Releasing
-I use [bump2version](https://github.com/c4urself/bump2version) to manage version bumping. This will update the version number in the library, commit it, and create a version tag.
+I use [bump-my-version](https://github.com/callowayproject/bump-my-version) to manage version bumping. This will update the version number in the library, commit it, and create a version tag.
 
 ```bash
-bump2version minor
-git push
+bump-my-version bump patch
+git push --follow-tags
 ```

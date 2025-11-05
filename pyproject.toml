@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yahoofantasy"
+dynamic = ["version"]
+description = "An SDK for the Yahoo! Fantasy Sports API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.3.0",
+    "colorama>=0.4.6",
+    "pydash>=8.0.5",
+    "requests>=2.32.5",
+    "xmljson>=0.2.1",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "yahoofantasy.__version__"}
+
+[project.scripts]
+yahoofantasy = "yahoofantasy.cli:yahoofantasy"
+
+[dependency-groups]
+dev = [
+    "coverage>=5.0.4",
+    "flake8>=3.7.9",
+    "pytest>=7",
+    "pytest-cov>=2.8.1",
+    "pytest-testmon>=1.0.2",
+    "pytest-watch>=4.2.0",
+    "responses>=0.10.12",
+]

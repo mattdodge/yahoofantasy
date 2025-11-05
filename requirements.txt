@@ -1,5 +1,0 @@
-click
-colorama
-requests
-pydash
-xmljson

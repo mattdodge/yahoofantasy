@@ -1,5 +1,5 @@
 from .player import Player
-from yahoofantasy.api.parse import get_value, from_response_object
+from yahoofantasy.api.parse import get_value
 from yahoofantasy.util.logger import logger
 
 

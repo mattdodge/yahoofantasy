@@ -180,7 +180,7 @@ class League:
             if full_league_key.startswith(last_years_game_code):
                 return (
                     int(last_years_game_code),
-                    int(full_league_key[len(last_years_game_code) :]),
+                    int(full_league_key[len(last_years_game_code):]),
                 )
             else:
                 # Try the previous year

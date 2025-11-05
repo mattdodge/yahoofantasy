@@ -28,6 +28,7 @@ def generate_stats(game, token):
             "order": int(stat["sort_order"]["$"]),
         }
     with open(join(dirname(__file__), "{}.py".format(game)), "w+") as f:
+        f.write("# flake8: noqa\n")
         f.write("stats=")
         json.dump(mapping, f)
 

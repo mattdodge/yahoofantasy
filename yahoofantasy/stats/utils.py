@@ -13,7 +13,6 @@ league_types = {
 
 def get_stat_from_value(stat_obj, league_type="mlb"):
     """Given a stat_obj, get a Stat object with an associated value"""
-    global league_types
     stats = league_types.get(league_type)
     if not stats:
         raise ValueError("League type of {} isn't valid".format(league_type))
@@ -33,7 +32,6 @@ def get_stat_from_value(stat_obj, league_type="mlb"):
 
 
 def get_stat_from_stat_list(stat_display, stat_list, order=None, league_type="mlb"):
-    global league_types
     stats = league_types.get(league_type)
     if not stats:
         raise ValueError("League type of {} isn't valid".format(league_type))

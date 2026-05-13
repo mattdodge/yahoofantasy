@@ -79,6 +79,8 @@ class League:
         players = []
         while "player" in data["fantasy_content"]["league"]["players"]:
             for player in data["fantasy_content"]["league"]["players"]["player"]:
+                if not isinstance(player, dict):
+                    continue
                 p = Player(self)
                 from_response_object(p, player)
                 players.append(p)

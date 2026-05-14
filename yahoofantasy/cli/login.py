@@ -65,12 +65,11 @@ def login(
     server = HTTPServer(("", listen_port), Handler)
     if not redirect_http:
         click.echo("Using localhost SSL certificate (HTTPS)")
-        server.socket = ssl.wrap_socket(
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(certfile=certfile, keyfile=keyfile)
+        server.socket = context.wrap_socket(
             server.socket,
-            server_side=True,
-            certfile=Path(__file__).parent / "localhost.pem",
-            keyfile=Path(__file__).parent / "localhost-key.pem",
-            ssl_version=ssl.PROTOCOL_TLS,
+            server_side=True
         )
     # This will serve until we get a valid access code, then it will shutdown by itself
     server.serve_forever()
